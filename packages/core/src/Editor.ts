@@ -4,7 +4,7 @@ import { RendererManager } from './RendererManager';
 import { TickManager } from './TickManager';
 import { CameraControl } from './CameraControl';
 
-interface IEditorOptions {
+export interface IEditorOptions {
   containerElement: HTMLDivElement;
 }
 
