@@ -58,6 +58,8 @@ export class Marker {
 
   private label: SpriteEntity;
 
+  private outRipple: SpriteEntity;
+
   constructor(private earth: Earth, schemaData: ISchemaData) {
     this.schemaData = schemaData;
 
@@ -69,13 +71,15 @@ export class Marker {
     this.pillar = this.createPillar();
     this.ripple = this.createRipple();
     this.label = this.createLabel();
+    this.outRipple = this.createOutRipple();
     this.connectorLine = this.createConnectorLine();
 
     this.pillar.mesh.add(this.ripple.mesh);
     this.earth.add(
       this.pillar.mesh,
       this.connectorLine.mesh,
-      this.label.sprite
+      this.label.sprite,
+      this.outRipple.sprite
     );
 
     this.earth.editor.tickManager.on("tick", this.tick);
@@ -151,7 +155,8 @@ export class Marker {
   }
 
   private createLabel(): SpriteEntity {
-    const texture = this.createLabelTexture();
+    const [scaleX, scaleY] = [0.4, 0.1];
+    const texture = this.createLabelTexture(scaleX, scaleY);
     const spriteMaterial = new SpriteMaterial({
       map: texture,
       transparent: true,
@@ -159,6 +164,7 @@ export class Marker {
     });
     const sprite = new Sprite(spriteMaterial);
     sprite.position.copy(this.localPosition.clone());
+    sprite.scale.set(scaleX, scaleY, 1);
     return {
       sprite,
       texture,
@@ -180,10 +186,28 @@ export class Marker {
     ctx.fillStyle = "#fff";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    ctx.font = "bold 40px Microsoft YaHei";
+    ctx.font = "bold 70px Microsoft YaHei";
     ctx.fillText(name, canvas.width / 2, canvas.height / 2);
 
     return new CanvasTexture(canvas);
+  }
+
+  private createOutRipple(): SpriteEntity {
+    const texture = this.textureLoader.load(
+      new URL("../assets/标记.webp", import.meta.url).href
+    );
+    const spriteMaterial = new SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthTest: false,
+    });
+    const sprite = new Sprite(spriteMaterial);
+    sprite.scale.set(0.25, 0.25, 1);
+    return {
+      sprite,
+      texture,
+      material: spriteMaterial,
+    };
   }
 
   private dotCameraAndMarker() {
@@ -212,8 +236,12 @@ export class Marker {
       .sub(planeNormal.clone().multiplyScalar(distance))
       .setLength(1 + 0.275);
 
+    this.outRipple.sprite.position.copy(
+      projectPosition.clone().add(new Vector3(0, 0.1, 0))
+    );
+
     this.label.sprite.position.copy(
-      projectPosition.clone().add(new Vector3(0, 0, 0))
+      projectPosition.clone().add(new Vector3(0, 0.1, 0))
     );
 
     const dotRange = Math.min(
@@ -238,14 +266,18 @@ export class Marker {
   tick = () => {
     const dot = this.dotCameraAndMarker();
     if (dot < ANGLE) {
-    } else {
-    }
-    this.updateConnectorLine();
-    if (dot < -ANGLE) {
+      this.updateConnectorLine();
       this.connectorLine.mesh.visible = true;
     } else {
-      this.label.sprite.position.copy(this.localPosition.clone());
       this.connectorLine.mesh.visible = false;
+    }
+    if (dot < -ANGLE) {
+      this.outRipple.sprite.visible = true;
+    } else {
+      this.label.sprite.position.copy(
+        this.localPosition.clone().add(new Vector3(0, -0.05, 0))
+      );
+      this.outRipple.sprite.visible = false;
     }
   };
 
@@ -253,7 +285,8 @@ export class Marker {
     this.earth.remove(
       this.pillar.mesh,
       this.connectorLine.mesh,
-      this.label.sprite
+      this.label.sprite,
+      this.outRipple.sprite
     );
 
     this.pillar.geometry.dispose();
@@ -266,5 +299,8 @@ export class Marker {
 
     this.label.texture.dispose();
     this.label.material.dispose();
+
+    this.outRipple.texture.dispose();
+    this.outRipple.material.dispose();
   }
 }
