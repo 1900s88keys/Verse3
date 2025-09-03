@@ -11,6 +11,10 @@ import {
   PointsMaterial,
   BufferAttribute,
   Object3D,
+  Sprite,
+  Material,
+  Texture,
+  SpriteMaterial,
 } from "three";
 import { Geography } from "@verse3/common";
 import { Editor, IEditorOptions } from "@verse3/core";
@@ -33,6 +37,12 @@ interface Lights {
   fillLight: DirectionalLight;
 }
 
+interface SpriteEntity {
+  sprite: Sprite;
+  material: Material;
+  texture: Texture;
+}
+
 export class Earth {
   private earthAttr = {
     radius: 1,
@@ -48,6 +58,8 @@ export class Earth {
 
   private startEntity: StartEntity;
 
+  private outRing: SpriteEntity;
+
   private lights: Lights;
   
   editor: Editor;
@@ -59,9 +71,11 @@ export class Earth {
     this.lights = this.setupLighting();
     this.earthEntity = this.createEarth();
     this.startEntity = this.createStars();
+    this.outRing = this.createOutRing()
     this.add(
       this.earthEntity.mesh,
       this.startEntity.mesh,
+      this.outRing.sprite,
       this.lights.ambientLight,
       this.lights.sunLight,
       this.lights.fillLight
@@ -198,6 +212,28 @@ export class Earth {
     };
   }
 
+  private createOutRing(): SpriteEntity {
+    const texture = this.textureLoader.load(
+      new URL("./assets/ring.png", import.meta.url).href
+    );
+    const spriteMaterial = new SpriteMaterial({
+      map: texture,
+      alphaMap: texture,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+    const sprite = new Sprite(spriteMaterial);
+    const scale = 2 * this.earthAttr.radius + 1.8;
+    sprite.scale.set(scale, scale, 1);
+    sprite.renderOrder = -1;
+    return {
+      sprite,
+      texture,
+      material: spriteMaterial,
+    };
+  }
+
   /**
    * 设置相机位置
    */
@@ -261,6 +297,7 @@ export class Earth {
     this.remove(
       this.earthEntity.mesh,
       this.startEntity.mesh,
+      this.outRing.sprite,
       this.lights.ambientLight,
       this.lights.sunLight,
       this.lights.fillLight
@@ -274,6 +311,9 @@ export class Earth {
 
     this.startEntity.geometry.dispose();
     this.startEntity.material.dispose();
+
+    this.outRing.material.dispose();
+    this.outRing.texture.dispose();
 
     this.editor.destroy();
   }

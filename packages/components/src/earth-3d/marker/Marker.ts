@@ -230,11 +230,11 @@ export class Marker {
     );
 
     const distance = pointToPlane.dot(planeNormal);
-
+    const increaseLen = 0.4;
     const projectPosition = new Vector3()
       .copy(this.localPosition.clone())
       .sub(planeNormal.clone().multiplyScalar(distance))
-      .setLength(1 + 0.275);
+      .setLength(this.earth.radius + increaseLen);
 
     this.outRipple.sprite.position.copy(
       projectPosition.clone().add(new Vector3(0, 0.1, 0))
@@ -249,7 +249,6 @@ export class Marker {
       ANGLE
     );
 
-    const increaseLen = 0.275;
     const lineLen =
       ((this.earth.radius + increaseLen) * (-dotRange + ANGLE)) / (ANGLE * 2);
     const tubeCurve = new CatmullRomCurve3([
