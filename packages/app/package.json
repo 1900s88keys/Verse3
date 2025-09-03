@@ -14,7 +14,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
-    "@verse3/core": "workspace:*",
+    "@verse3/components": "workspace:*",
     "vue": "^3.5.20"
   },
   "devDependencies": {

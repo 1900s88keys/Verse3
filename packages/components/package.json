@@ -1,0 +1,28 @@
+{
+  "name": "@verse3/components",
+  "version": "1.0.0",
+  "description": "Demo展示包，基于@verse3/core实现",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "keywords": ["demo", "3d", "three", "editor"],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "dependencies": {
+    "@verse3/core": "workspace:*",
+    "@verse3/common": "workspace:*",
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.179.0",
+    "vite": "^5.0.8",
+    "vitest": "^2.0.0"
+  }
+}

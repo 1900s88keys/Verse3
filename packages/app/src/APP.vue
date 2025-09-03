@@ -1,16 +1,10 @@
 <template>
+  <Earth/>
 </template>
 
 <script setup>
-  import { onUnmounted } from "vue";
-  import { Editor } from "@verse3/core";
-  const editor = new Editor({
-    containerElement: document.body,
-  });
-   
-  onUnmounted(() => {
-    editor.destroy();
-  });
+  import Earth from './pages/earth/Earth.vue';
+ 
 </script>
 
 <style>

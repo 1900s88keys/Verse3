@@ -1,8 +1,8 @@
-import { Setting } from './Setting';
-import { SceneManager } from './SceneManager';
-import { RendererManager } from './RendererManager';
-import { TickManager } from './TickManager';
-import { CameraControl } from './CameraControl';
+import { Setting } from "./Setting";
+import { SceneManager } from "./SceneManager";
+import { RendererManager } from "./RendererManager";
+import { TickManager } from "./TickManager";
+import { CameraControl } from "./CameraControl";
 
 export interface IEditorOptions {
   containerElement: HTMLDivElement;
@@ -20,14 +20,14 @@ export class Editor {
   sceneManager: SceneManager;
 
   rendererManager: RendererManager;
-  
+
   tickManager: TickManager;
 
   constructor(options: IEditorOptions) {
     this.containerElement = options.containerElement;
-    this.canvasElement = document.createElement('canvas');
+    this.canvasElement = document.createElement("canvas");
     this.containerElement.appendChild(this.canvasElement);
-    
+
     this.tickManager = new TickManager(this);
 
     this.setting = new Setting();
@@ -40,16 +40,16 @@ export class Editor {
   }
 
   destroy(): void {
+    // 按依赖顺序销毁各个管理器
+    this.tickManager.destroy();
+    this.setting.destroy();
+    this.cameraControl.destroy();
+    this.sceneManager.destroy();
+    this.rendererManager.destroy();
+
     // 清理DOM元素
     this.containerElement.removeChild(this.canvasElement);
 
-    // 按依赖顺序销毁各个管理器
-    this.tickManager.destroy();
-    this.cameraControl.destroy();
-    this.sceneManager.destroy();
-    this.setting.destroy();
-    this.rendererManager.destroy();
-    
     // 清理引用 - 使用undefined而不是null as any
     this.tickManager = undefined as unknown as TickManager;
     this.containerElement = undefined as unknown as HTMLDivElement;
