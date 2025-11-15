@@ -1,0 +1,8 @@
+
+:root {
+  --vt-c-white: #ffffff;
+}
+
+:root {
+  --color-background: var(--vt-c-white);
+}

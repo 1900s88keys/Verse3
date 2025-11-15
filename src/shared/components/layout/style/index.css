@@ -1,0 +1,203 @@
+/* 布局组件全局样式 */
+
+/* CSS 变量定义 */
+:root {
+  --layout-header-height: 64px;
+  --layout-footer-height: 64px;
+  --layout-sidebar-width: 240px;
+  --layout-sidebar-collapsed-width: 64px;
+  --layout-primary-color: #1890ff;
+  --layout-text-color: #333;
+  --layout-text-color-secondary: #666;
+  --layout-border-color: #e8e8e8;
+  --layout-background-color: #f5f5f5;
+  --layout-header-background: #fff;
+  --layout-sidebar-background: #fff;
+  --layout-content-background: #f5f5f5;
+  --layout-footer-background: #fff;
+}
+
+/* 基础布局重置 */
+.layout {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.layout *,
+.layout *::before,
+.layout *::after {
+  box-sizing: inherit;
+}
+
+/* 响应式断点 */
+@media (max-width: 1200px) {
+  :root {
+    --layout-sidebar-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --layout-header-height: 56px;
+    --layout-footer-height: 56px;
+    --layout-sidebar-width: 100%;
+    --layout-sidebar-collapsed-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --layout-header-height: 48px;
+    --layout-footer-height: 48px;
+  }
+}
+
+/* 通用工具类 */
+.layout-flex {
+  display: flex;
+}
+
+.layout-flex-column {
+  flex-direction: column;
+}
+
+.layout-flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.layout-flex-between {
+  justify-content: space-between;
+}
+
+.layout-flex-1 {
+  flex: 1;
+}
+
+/* 过渡动画 */
+.layout-transition {
+  transition: all 0.2s ease-in-out;
+}
+
+.layout-transition-slow {
+  transition: all 0.3s ease-in-out;
+}
+
+/* 阴影效果 */
+.layout-shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.layout-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.layout-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 滚动条样式 */
+.layout-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d9d9d9 transparent;
+}
+
+.layout-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.layout-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.layout-scrollbar::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+
+.layout-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+.layout-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 文本省略 */
+.layout-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.layout-ellipsis-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.layout-ellipsis-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* 主题变体 */
+.layout-theme-dark {
+  --layout-text-color: #fff;
+  --layout-text-color-secondary: #a6a6a6;
+  --layout-border-color: #303030;
+  --layout-background-color: #141414;
+  --layout-header-background: #1f1f1f;
+  --layout-sidebar-background: #1f1f1f;
+  --layout-content-background: #141414;
+  --layout-footer-background: #1f1f1f;
+}
+
+.layout-theme-compact {
+  --layout-header-height: 48px;
+  --layout-footer-height: 48px;
+  --layout-sidebar-width: 200px;
+  --layout-sidebar-collapsed-width: 48px;
+}
+
+/* 打印样式 */
+@media print {
+  .layout {
+    height: auto;
+    overflow: visible;
+  }
+  
+  .layout-header,
+  .layout-sidebar,
+  .layout-footer {
+    display: none;
+  }
+  
+  .layout-content {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  :root {
+    --layout-border-color: #000;
+    --layout-text-color: #000;
+    --layout-background-color: #fff;
+  }
+}
+
+/* 减少动画模式 */
+@media (prefers-reduced-motion: reduce) {
+  .layout-transition,
+  .layout-transition-slow {
+    transition: none;
+  }
+}
