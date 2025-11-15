@@ -95,6 +95,15 @@ jobs:
     needs: [ci]
     if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: preview
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -111,9 +120,21 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages (Preview)
+        id: deployment
+        uses: actions/deploy-pages@v4
+
       - name: Deploy to preview environment
         run: |
           echo "🚀 Preview deployment completed"
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
-          echo "Preview URL will be available after deployment"
+          echo "Preview URL: ${{ steps.deployment.outputs.page_url }}"
