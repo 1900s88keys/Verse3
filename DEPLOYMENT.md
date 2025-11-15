@@ -8,7 +8,6 @@
 
 1. **CI (Continuous Integration)**
    - 代码检查：TypeScript 类型检查、ESLint 代码规范检查
-   - 自动化测试：单元测试 (Vitest) + E2E 测试 (Playwright)
    - 项目构建：Vite 构建优化
 
 2. **CD (Continuous Deployment)**
@@ -59,16 +58,15 @@ VITE_API_BASE_URL=https://dev-api.example.com
 
 | 事件 | 分支 | 执行流程 | 部署目标 |
 |------|------|----------|----------|
-| Push | main | CI + E2E + CD | GitHub Pages (生产) |
+| Push | main | CI + CD | GitHub Pages (生产) |
 | Push | dev | CI + CD | Preview (预览) |
-| Pull Request | main | CI + E2E | 无部署 |
+| Pull Request | main | CI | 无部署 |
 | Push | other | CI | 无部署 |
 
 ## 📊 构建产物
 
 ### 上传的 Artifacts
 - `build-files`: 构建产物 (保留 7 天)
-- `playwright-report`: E2E 测试报告 (保留 7 天)
 
 ### 部署路径
 - **生产环境**: `https://1900s88keys.github.io/Verse3/`
@@ -91,8 +89,6 @@ npm run dev
 npm run build
 npm run type-check
 npm run lint
-npm run test:unit
-npm run test:e2e
 ```
 
 ## 🔧 自定义配置
@@ -127,13 +123,13 @@ env:
    - 检查 `package.json` 中的 engines.node 版本
    - 确认所有依赖都已正确安装
 
-2. **部署失败**
+3. **构建失败**
+   - 检查 `package.json` 中的 engines.node 版本
+   - 确认所有依赖都已正确安装
+
+4. **部署失败**
    - 检查 GitHub Pages 权限设置
    - 确认仓库是公开的或启用了 GitHub Pages for private repos
-
-3. **测试失败**
-   - 本地运行测试确认：`npm run test:unit`
-   - 检查 Playwright 浏览器安装：`npx playwright install`
 
 ### 调试技巧
 
