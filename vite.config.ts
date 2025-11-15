@@ -17,4 +17,22 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'vue-router', 'pinia'],
+          ui: ['naive-ui'],
+          three: ['three']
+        }
+      }
+    }
+  },
+  base: process.env.NODE_ENV === 'production' ? '/Verse3/' : '/',
+  server: {
+    port: 5173,
+    host: true
+  }
 })
