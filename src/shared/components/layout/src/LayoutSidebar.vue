@@ -1,11 +1,11 @@
 <template>
   <!-- 移动端遮罩层 - 移到侧边栏外面 -->
-  <div 
-    v-if="isMobile && mobileSidebarOpen" 
+  <div
+    v-if="isMobile && mobileSidebarOpen"
     class="sidebar-overlay"
     @click="closeMobileSidebar"
   ></div>
-  
+
   <aside class="layout-sidebar" :class="sidebarClass" :style="sidebarStyle">
     <div v-if="title && !collapsed" class="sidebar-header">
       <h2 class="sidebar-title">{{ title }}</h2>
@@ -81,11 +81,13 @@ const emit = defineEmits<{
 }>()
 
 // 注入移动端侧边栏状态
-const mobileSidebarState = inject('mobileSidebarState') as {
-  isMobile: { value: boolean }
-  mobileSidebarOpen: { value: boolean }
-  closeMobileSidebar: () => void
-} | undefined
+const mobileSidebarState = inject('mobileSidebarState') as
+  | {
+      isMobile: { value: boolean }
+      mobileSidebarOpen: { value: boolean }
+      closeMobileSidebar: () => void
+    }
+  | undefined
 
 const isMobile = computed(() => mobileSidebarState?.isMobile.value || false)
 const mobileSidebarOpen = computed(() => mobileSidebarState?.mobileSidebarOpen.value || false)
@@ -124,12 +126,12 @@ const handleCollapse = () => {
 
 const handleMenuClick = (item: MenuItem) => {
   if (item.disabled) return
-  
+
   // 在移动端点击菜单项后关闭侧边栏
   if (isMobile.value && mobileSidebarState) {
     mobileSidebarState.closeMobileSidebar()
   }
-  
+
   emit('menu-click', item)
 }
 
@@ -148,7 +150,6 @@ const handleImageError = (event: Event) => {
 <style scoped>
 .layout-sidebar {
   background: var(--layout-sidebar-background);
-  border-right: 1px solid var(--layout-border-color);
   transition: width 0.3s ease-in-out;
   position: relative;
   display: flex;
@@ -370,7 +371,7 @@ const handleImageError = (event: Event) => {
   transform: translateY(-50%);
   width: 32px;
   height: 32px;
-  background: var(--layout-background-color);
+  background: #fff;
   border: 1px solid var(--layout-border-color);
   border-radius: 50%;
   display: flex;

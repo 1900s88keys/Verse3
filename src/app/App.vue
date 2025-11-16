@@ -31,6 +31,7 @@ watch(
       <LayoutSidebar
         :collapsed="menus.sidebarCollapsed"
         :menu-items="menus.menuItems"
+        :collapsedWidth="0"
         :active-key="menus.activeMenuKey"
         title="3D Journey"
         @collapse="menus.onCollapseChange"
