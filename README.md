@@ -31,15 +31,6 @@ Verse3/
 │   └── vue.spec.ts
 ├── public/                   # 静态资源
 │   ├── favicon.ico
-│   └── images/              # 图标资源
-│       ├── animation.svg
-│       ├── components.svg
-│       ├── dashboard.svg
-│       ├── geometry.svg
-│       ├── home.svg
-│       ├── lighting.svg
-│       ├── materials.svg
-│       └── settings.svg
 ├── src/                      # 源代码目录
 │   ├── app/                  # 应用核心
 │   │   ├── App.ts           # 应用入口
@@ -55,7 +46,7 @@ Verse3/
 │   │   │   └── index.vue   # 页面入口
 │   │   └── layout-demo/    # 布局演示页面
 │   └── shared/              # 共享资源
-│       ├── components/      # 通用组件
+│       ├── components/      # 通用公共组件
 │       │   └── layout/     # 布局组件
 │       │       ├── src/
 │       │       │   ├── LayoutSidebar.vue  # 侧边栏组件
@@ -63,7 +54,7 @@ Verse3/
 │       │       │   └── index.ts          # 组件导出
 │       │       └── package.json
 │       ├── images/          # 图片资源
-│       └── style/           # 样式文件
+│       └── style/           # 公共样式文件
 │           ├── app.css
 │           └── vars.css
 ├── test/                    # 测试配置
@@ -126,7 +117,7 @@ Verse3/
 
 #### LayoutSidebar 组件特性：
 
-1. **智能折叠**: 
+1. **智能折叠**:
    - 折叠时只显示图标，隐藏文字内容
    - 图标完美居中对齐
    - 平滑的过渡动画

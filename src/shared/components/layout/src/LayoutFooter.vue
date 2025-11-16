@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { FooterProps } from '../type/types'
 
 const props = withDefaults(defineProps<FooterProps>(), {

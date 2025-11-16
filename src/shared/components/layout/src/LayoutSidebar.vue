@@ -54,6 +54,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { MenuItem, SidebarProps } from '../type/types'
 
 const props = withDefaults(defineProps<SidebarProps>(), {
