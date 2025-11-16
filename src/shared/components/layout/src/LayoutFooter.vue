@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { FooterProps } from '../type/types'
 
 const props = withDefaults(defineProps<FooterProps>(), {
@@ -72,14 +73,14 @@ const footerStyle = computed(() => ({
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  border-top: 1px solid #e8e8e8;
+  background: var(--layout-footer-background);
+  border-top: 1px solid var(--layout-border-color);
   position: relative;
   z-index: 100;
 }
 
 .footer-bordered {
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid var(--layout-border-color);
 }
 
 .footer-fixed {
@@ -133,7 +134,7 @@ const footerStyle = computed(() => ({
 }
 
 .footer-link:hover {
-  color: #1890ff;
+  color: var(--layout-primary-color);
 }
 
 .footer-info {

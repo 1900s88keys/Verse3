@@ -1,5 +1,5 @@
 <template>
-  <header class="layout-header" :class="headerClass">
+  <header v-if="shouldShow" class="layout-header" :class="headerClass">
     <div class="header-left">
       <slot name="left">
         <button v-if="showToggle" class="sidebar-toggle" @click="handleToggle">
@@ -27,7 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+
 import type { HeaderProps } from '../type/types'
 
 const props = withDefaults(defineProps<HeaderProps>(), {
@@ -44,17 +45,34 @@ const emit = defineEmits<{
   toggle: []
 }>()
 
+// 注入移动端侧边栏状态
+const mobileSidebarState = inject('mobileSidebarState') as {
+  isMobile: { value: boolean }
+  toggleMobileSidebar: () => void
+} | undefined
+
 const headerClass = computed(() => ({
   'header-bordered': props.bordered,
   'header-fixed': props.fixed,
 }))
+
+// 是否应该显示头部：移动端显示，PC端隐藏
+const shouldShow = computed(() => {
+  return mobileSidebarState?.isMobile.value || false
+})
 
 const userInitial = computed(() => {
   return props.userName.charAt(0).toUpperCase()
 })
 
 const handleToggle = () => {
-  emit('toggle')
+  // 如果是移动端且有移动端状态管理，使用移动端逻辑
+  if (mobileSidebarState?.isMobile.value) {
+    mobileSidebarState.toggleMobileSidebar()
+  } else {
+    // PC端使用原有逻辑
+    emit('toggle')
+  }
 }
 </script>
 
@@ -64,15 +82,15 @@ const handleToggle = () => {
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  height: 64px;
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
+  height: var(--layout-header-height);
+  background: var(--layout-header-background);
+  border-bottom: 1px solid var(--layout-border-color);
   position: relative;
   z-index: 100;
 }
 
 .header-bordered {
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid var(--layout-border-color);
 }
 
 .header-fixed {
@@ -114,13 +132,13 @@ const handleToggle = () => {
 }
 
 .sidebar-toggle:hover {
-  background-color: #f5f5f5;
+  background-color: var(--layout-background-color);
 }
 
 .header-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--layout-text-color);
 }
 
 .user-info {
@@ -144,7 +162,7 @@ const handleToggle = () => {
 
 .user-name {
   font-size: 14px;
-  color: #666;
+  color: var(--layout-text-color-secondary);
 }
 
 @media (max-width: 768px) {

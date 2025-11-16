@@ -1,13 +1,18 @@
-import type { App } from "vue";
+
 import Layout from "./src/AppLayout.vue";
-import LayoutHeader from "./src/LayoutHeader.vue";
-import LayoutSidebar from "./src/LayoutSidebar.vue";
 import LayoutContent from "./src/LayoutContent.vue";
 import LayoutFooter from "./src/LayoutFooter.vue";
+import LayoutHeader from "./src/LayoutHeader.vue";
+import LayoutSidebar from "./src/LayoutSidebar.vue";
+
+// 导出composable
+export { useMobileSidebar } from './composables/useMobileSidebar';
+
+import type { LayoutPreset, ResponsiveInfo } from "./type/types";
+import type { App } from "vue";
 
 // 导入统一样式
 import "./style/index.css";
-import type { LayoutPreset, ResponsiveInfo } from "./type/types";
 
 // 导入统一类型定义
 export type {
