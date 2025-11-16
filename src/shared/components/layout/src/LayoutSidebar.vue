@@ -1,5 +1,4 @@
 <template>
-  <!-- 移动端遮罩层 - 移到侧边栏外面 -->
   <div
     v-if="isMobile && mobileSidebarOpen"
     class="sidebar-overlay"
@@ -13,7 +12,10 @@
     <div v-if="!collapsed" class="sidebar-content">
       <slot>
         <div class="sidebar-menu">
-          <template v-for="category in categorizedMenuItems" :key="category.name">
+          <template
+            v-for="category in categorizedMenuItems"
+            :key="category.name"
+          >
             <div v-if="category.name" class="menu-category">
               <h3 class="category-title">{{ category.name }}</h3>
             </div>
@@ -38,7 +40,10 @@
                 </div>
                 <div class="menu-item-content">
                   <div class="menu-item-title">{{ item.label }}</div>
-                  <div v-if="item.description && !collapsed" class="menu-item-description">
+                  <div
+                    v-if="item.description && !collapsed"
+                    class="menu-item-description"
+                  >
                     {{ item.description }}
                   </div>
                 </div>
@@ -50,7 +55,10 @@
     </div>
 
     <div v-if="collapsible" class="sidebar-trigger" @click="handleCollapse">
-      <div class="trigger-icon" :class="{ 'trigger-icon-collapsed': collapsed }">
+      <div
+        class="trigger-icon"
+        :class="{ 'trigger-icon-collapsed': collapsed }"
+      >
         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
         </svg>
@@ -60,9 +68,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed, inject } from 'vue';
 
-import type { MenuItem, SidebarProps } from '../type/types'
+import type { MenuItem, SidebarProps } from '../type/types';
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsed: false,
@@ -73,78 +81,80 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   menuItems: () => [],
   activeKey: '',
   title: '导航菜单',
-})
+});
 
 const emit = defineEmits<{
-  collapse: [collapsed: boolean]
-  'menu-click': [item: MenuItem]
-}>()
+  collapse: [collapsed: boolean];
+  'menu-click': [item: MenuItem];
+}>();
 
 // 注入移动端侧边栏状态
 const mobileSidebarState = inject('mobileSidebarState') as
   | {
-      isMobile: { value: boolean }
-      mobileSidebarOpen: { value: boolean }
-      closeMobileSidebar: () => void
+      isMobile: { value: boolean };
+      mobileSidebarOpen: { value: boolean };
+      closeMobileSidebar: () => void;
     }
-  | undefined
+  | undefined;
 
-const isMobile = computed(() => mobileSidebarState?.isMobile.value || false)
-const mobileSidebarOpen = computed(() => mobileSidebarState?.mobileSidebarOpen.value || false)
+const isMobile = computed(() => mobileSidebarState?.isMobile.value || false);
+const mobileSidebarOpen = computed(
+  () => mobileSidebarState?.mobileSidebarOpen.value || false,
+);
 
 // 按分类组织菜单项
 const categorizedMenuItems = computed(() => {
-  const categoryMap = new Map<string, MenuItem[]>()
+  const categoryMap = new Map<string, MenuItem[]>();
 
   props.menuItems.forEach((item) => {
-    const category = item.category || ''
+    const category = item.category || '';
     if (!categoryMap.has(category)) {
-      categoryMap.set(category, [])
+      categoryMap.set(category, []);
     }
-    categoryMap.get(category)!.push(item)
-  })
+    categoryMap.get(category)!.push(item);
+  });
 
   return Array.from(categoryMap.entries()).map(([name, items]) => ({
     name: name || undefined,
     items,
-  }))
-})
+  }));
+});
 
 const sidebarClass = computed(() => ({
   'sidebar-collapsed': props.collapsed,
   'sidebar-bordered': props.bordered,
   'sidebar-mobile-open': isMobile.value && mobileSidebarOpen.value,
-}))
+}));
 
 const sidebarStyle = computed(() => ({
   width: props.collapsed ? `${props.collapsedWidth}px` : `${props.width}px`,
-}))
+}));
 
 const handleCollapse = () => {
-  emit('collapse', !props.collapsed)
-}
+  emit('collapse', !props.collapsed);
+};
 
 const handleMenuClick = (item: MenuItem) => {
-  if (item.disabled) return
+  if (item.disabled) return;
 
   // 在移动端点击菜单项后关闭侧边栏
   if (isMobile.value && mobileSidebarState) {
-    mobileSidebarState.closeMobileSidebar()
+    mobileSidebarState.closeMobileSidebar();
   }
 
-  emit('menu-click', item)
-}
+  emit('menu-click', item);
+};
 
 const closeMobileSidebar = () => {
   if (mobileSidebarState) {
-    mobileSidebarState.closeMobileSidebar()
+    mobileSidebarState.closeMobileSidebar();
   }
-}
+};
 
 const handleImageError = (event: Event) => {
-  const img = event.target as HTMLImageElement
-  img.style.display = 'none'
-}
+  const img = event.target as HTMLImageElement;
+  img.style.display = 'none';
+};
 </script>
 
 <style scoped>

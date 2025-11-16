@@ -7,7 +7,6 @@
 - **框架**: Vue 3.5.22
 - **语言**: TypeScript 5.9
 - **构建工具**: Vite 7.1
-- **状态管理**: Pinia 3.0
 - **路由**: Vue Router 4.6
 - **样式**: CSS + Tailwind CSS
 - **测试**: Vitest + Playwright
@@ -311,7 +310,6 @@ npm run type-check
 - [Vue 3 官方文档](https://vuejs.org/)
 - [TypeScript 官方文档](https://www.typescriptlang.org/)
 - [Vite 官方文档](https://vitejs.dev/)
-- [Pinia 官方文档](https://pinia.vuejs.org/)
 - [Vue Router 官方文档](https://router.vuejs.org/)
 
 ## 🤝 贡献指南
