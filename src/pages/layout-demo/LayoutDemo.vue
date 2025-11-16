@@ -510,8 +510,9 @@ onUnmounted(() => {
   if (worker) {
     worker.terminate()
   }
-  if (worker) {
-    URL.revokeObjectURL((worker as any).blobURL)
+  const workerWithBlob = worker as Worker & { blobURL?: string }
+  if (workerWithBlob.blobURL) {
+    URL.revokeObjectURL(workerWithBlob.blobURL)
   }
 })
 </script>
@@ -842,6 +843,7 @@ footer {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
   outline: none;
+  appearance: none;
   -webkit-appearance: none;
 }
 
