@@ -1,15 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "@/pages/home-page/HomePage.vue";
-import LayoutDemo from "@/pages/layout-demo/LayoutDemo.vue";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
       name: "home",
-      component: Home,
+      component: () => import("@/pages/home-page/HomePage.vue"),
       meta: {
         title: "首页",
       },
@@ -17,9 +14,17 @@ const router = createRouter({
     {
       path: "/demo",
       name: "demo",
-      component: LayoutDemo,
+      component: () => import("@/pages/layout-demo/LayoutDemo.vue"),
       meta: {
         title: "布局演示",
+      },
+    },
+    {
+      path: "/reflection",
+      name: "reflection",
+      component: () => import("@/pages/reflection-page/ReflectionPage.vue"),
+      meta: {
+        title: "反射演示",
       },
     },
   ],

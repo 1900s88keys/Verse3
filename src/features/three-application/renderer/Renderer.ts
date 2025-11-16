@@ -1,0 +1,39 @@
+import { WebGLRenderer } from 'three';
+
+import type { Sizes } from '../utils/Sizes';
+
+export class Renderer {
+  private _instance: WebGLRenderer;
+
+  private sizes: Sizes;
+
+  get instance() {
+    return this._instance;
+  }
+  constructor({ canvas, sizes }: { canvas: HTMLCanvasElement; sizes: Sizes }) {
+    this.sizes = sizes;
+    this._instance = new WebGLRenderer({
+      canvas,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+    this.bindEvent();
+  }
+
+  private bindEvent() {
+    this.sizes.on('resize', this.handleResize);
+  }
+
+  private unbindEvent() {
+    this.sizes.off('resize', this.handleResize);
+  }
+
+  private handleResize = (width: number, height: number) => {
+    this._instance.setSize(width, height);
+  };
+
+  destroy() {
+    this.unbindEvent();
+    this._instance.dispose();
+  }
+}

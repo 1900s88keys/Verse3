@@ -18,6 +18,13 @@ const threeJsMenuItems: MenuItem[] = [
     description: "布局组件演示",
     image: "/images/layout.svg",
   },
+  {
+    key: "/reflection",
+    label: "反射演示",
+    category: "Three.js",
+    description: "反射组件演示",
+    image: "/images/reflection.svg",
+  },
 ];
 
 const webGpuMenuItems: MenuItem[] = [];
