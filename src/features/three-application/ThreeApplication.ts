@@ -77,10 +77,14 @@ export class ThreeApplication {
 
   destroy() {
     this.unbindEvent();
+    this.ticker.destroy();
 
     this.gui.destroy();
     this.sizes.destroy();
+
     this.renderer.destroy();
+    this.camera.destroy();
+    this.scene.clear();
 
     this.containerElement?.removeChild(this.canvas);
     this.containerElement?.removeChild(this.stats.dom);
