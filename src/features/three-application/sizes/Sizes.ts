@@ -5,9 +5,16 @@ interface Events {
 }
 
 export class Sizes extends EventEmitter<Events> {
+  private containerElement?: HTMLElement;
+
+  width: number;
+
+  height: number;
+
   constructor() {
     super();
-    this.bindEvents();
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
   }
 
   private bindEvents = () => {
@@ -18,8 +25,16 @@ export class Sizes extends EventEmitter<Events> {
     window.removeEventListener('resize', this.handleResize);
   };
 
+  init(containerElement: HTMLElement) {
+    this.containerElement = containerElement;
+    this.bindEvents();
+    this.handleResize();
+  }
+
   handleResize = () => {
-    this.emit('resize', window.innerWidth, window.innerHeight);
+    this.width = this.containerElement?.offsetWidth || window.innerWidth;
+    this.height = this.containerElement?.offsetHeight || window.innerHeight;
+    this.emit('resize', this.width, this.height);
   };
 
   destroy() {

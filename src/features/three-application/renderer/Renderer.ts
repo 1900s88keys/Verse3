@@ -1,6 +1,6 @@
 import { WebGLRenderer } from 'three';
 
-import type { Sizes } from '../utils/Sizes';
+import type { Sizes } from '../sizes/Sizes';
 
 export class Renderer {
   private _instance: WebGLRenderer;
