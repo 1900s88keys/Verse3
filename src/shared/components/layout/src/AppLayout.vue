@@ -15,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
+
+import { useMobileSidebar } from '../composables/useMobileSidebar'
 
 import type { LayoutProps } from '../type/types'
 
@@ -26,6 +28,12 @@ const props = withDefaults(defineProps<LayoutProps>(), {
   sidebarCollapsed: false,
   layoutDirection: 'vertical',
 })
+
+// 移动端侧边栏状态管理
+const mobileSidebarState = useMobileSidebar()
+
+// 提供给子组件使用
+provide('mobileSidebarState', mobileSidebarState)
 
 const layoutClass = computed(() => ({
   'layout-horizontal': props.layoutDirection === 'horizontal',

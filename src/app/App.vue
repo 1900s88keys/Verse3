@@ -3,7 +3,11 @@ import { watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 
 import { menus } from '@/app/menus/Menus'
-import Layout, { LayoutSidebar, LayoutContent } from '@/shared/components/layout/Layout'
+import Layout, {
+  LayoutSidebar,
+  LayoutContent,
+  LayoutHeader,
+} from '@/shared/components/layout/Layout'
 
 const route = useRoute()
 
@@ -19,12 +23,15 @@ watch(
 
 <template>
   <Layout :sidebar-collapsed="menus.sidebarCollapsed">
+    <template #header>
+      <LayoutHeader title="3D Journey" :show-toggle="true" />
+    </template>
+
     <template #sidebar>
       <LayoutSidebar
         :collapsed="menus.sidebarCollapsed"
         :menu-items="menus.menuItems"
         :active-key="menus.activeMenuKey"
-        :collapsed-width="0"
         title="3D Journey"
         @collapse="menus.onCollapseChange"
         @menu-click="menus.handleMenuClick"

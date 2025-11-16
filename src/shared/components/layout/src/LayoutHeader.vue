@@ -1,5 +1,5 @@
 <template>
-  <header class="layout-header" :class="headerClass">
+  <header v-if="shouldShow" class="layout-header" :class="headerClass">
     <div class="header-left">
       <slot name="left">
         <button v-if="showToggle" class="sidebar-toggle" @click="handleToggle">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 import type { HeaderProps } from '../type/types'
 
@@ -45,17 +45,34 @@ const emit = defineEmits<{
   toggle: []
 }>()
 
+// 注入移动端侧边栏状态
+const mobileSidebarState = inject('mobileSidebarState') as {
+  isMobile: { value: boolean }
+  toggleMobileSidebar: () => void
+} | undefined
+
 const headerClass = computed(() => ({
   'header-bordered': props.bordered,
   'header-fixed': props.fixed,
 }))
+
+// 是否应该显示头部：移动端显示，PC端隐藏
+const shouldShow = computed(() => {
+  return mobileSidebarState?.isMobile.value || false
+})
 
 const userInitial = computed(() => {
   return props.userName.charAt(0).toUpperCase()
 })
 
 const handleToggle = () => {
-  emit('toggle')
+  // 如果是移动端且有移动端状态管理，使用移动端逻辑
+  if (mobileSidebarState?.isMobile.value) {
+    mobileSidebarState.toggleMobileSidebar()
+  } else {
+    // PC端使用原有逻辑
+    emit('toggle')
+  }
 }
 </script>
 

@@ -5,6 +5,9 @@ import LayoutFooter from "./src/LayoutFooter.vue";
 import LayoutHeader from "./src/LayoutHeader.vue";
 import LayoutSidebar from "./src/LayoutSidebar.vue";
 
+// 导出composable
+export { useMobileSidebar } from './composables/useMobileSidebar';
+
 import type { LayoutPreset, ResponsiveInfo } from "./type/types";
 import type { App } from "vue";
 

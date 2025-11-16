@@ -1,4 +1,11 @@
 <template>
+  <!-- 移动端遮罩层 - 移到侧边栏外面 -->
+  <div 
+    v-if="isMobile && mobileSidebarOpen" 
+    class="sidebar-overlay"
+    @click="closeMobileSidebar"
+  ></div>
+  
   <aside class="layout-sidebar" :class="sidebarClass" :style="sidebarStyle">
     <div v-if="title && !collapsed" class="sidebar-header">
       <h2 class="sidebar-title">{{ title }}</h2>
@@ -53,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 import type { MenuItem, SidebarProps } from '../type/types'
 
@@ -72,6 +79,16 @@ const emit = defineEmits<{
   collapse: [collapsed: boolean]
   'menu-click': [item: MenuItem]
 }>()
+
+// 注入移动端侧边栏状态
+const mobileSidebarState = inject('mobileSidebarState') as {
+  isMobile: { value: boolean }
+  mobileSidebarOpen: { value: boolean }
+  closeMobileSidebar: () => void
+} | undefined
+
+const isMobile = computed(() => mobileSidebarState?.isMobile.value || false)
+const mobileSidebarOpen = computed(() => mobileSidebarState?.mobileSidebarOpen.value || false)
 
 // 按分类组织菜单项
 const categorizedMenuItems = computed(() => {
@@ -94,6 +111,7 @@ const categorizedMenuItems = computed(() => {
 const sidebarClass = computed(() => ({
   'sidebar-collapsed': props.collapsed,
   'sidebar-bordered': props.bordered,
+  'sidebar-mobile-open': isMobile.value && mobileSidebarOpen.value,
 }))
 
 const sidebarStyle = computed(() => ({
@@ -106,7 +124,19 @@ const handleCollapse = () => {
 
 const handleMenuClick = (item: MenuItem) => {
   if (item.disabled) return
+  
+  // 在移动端点击菜单项后关闭侧边栏
+  if (isMobile.value && mobileSidebarState) {
+    mobileSidebarState.closeMobileSidebar()
+  }
+  
   emit('menu-click', item)
+}
+
+const closeMobileSidebar = () => {
+  if (mobileSidebarState) {
+    mobileSidebarState.closeMobileSidebar()
+  }
 }
 
 const handleImageError = (event: Event) => {
@@ -416,6 +446,7 @@ const handleImageError = (event: Event) => {
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+    backdrop-filter: blur(2px);
   }
 
   .sidebar-trigger {
