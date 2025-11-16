@@ -117,38 +117,50 @@ const handleImageError = (event: Event) => {
 
 <style scoped>
 .layout-sidebar {
-  position: relative;
-  background: #fff;
-  border-right: 1px solid #e8e8e8;
+  background: var(--layout-sidebar-background);
+  border-right: 1px solid var(--layout-border-color);
   transition: width 0.3s ease-in-out;
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-shadow: var(--layout-shadow-sidebar);
 }
 
 .sidebar-bordered {
-  border-right: 1px solid #e8e8e8;
+  border-right: 1px solid var(--layout-border-color);
 }
 
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 16px 16px 16px;
-  border-bottom: 1px solid #e8e8e8;
-  background: #fafafa;
+  padding: 20px 16px 0px 16px;
   transition: opacity 0.3s ease-in-out;
 }
 
 .sidebar-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #262626;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  padding-bottom: 8px;
-  transition: opacity 0.3s ease-in-out;
+  font-family:
+    Orbitron,
+    Consolas,
+    Microsoft YaHei,
+    sans-serif;
+  font-size: 20px;
+  padding: 0 0 16px;
+  width: 100%;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-shadow: var(--shadow-sidebar-title);
+  font-weight: 700;
+  border-bottom: 1px solid var(--layout-border-subtle);
+  color: var(--layout-text-color);
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .sidebar-collapsed .sidebar-title {
@@ -170,7 +182,6 @@ const handleImageError = (event: Event) => {
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 .menu-category {
@@ -180,7 +191,7 @@ const handleImageError = (event: Event) => {
 .category-title {
   font-size: 12px;
   font-weight: 600;
-  color: #666;
+  color: var(--layout-text-color-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;
@@ -207,8 +218,8 @@ const handleImageError = (event: Event) => {
 .menu-item-card {
   display: flex;
   flex-direction: column;
-  background: #fff;
-  border: 1px solid #e8e8e8;
+  background: var(--layout-background-color);
+  border: 1px solid var(--layout-border-color);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -223,13 +234,13 @@ const handleImageError = (event: Event) => {
 }
 
 .menu-item-card:hover {
-  border-color: #1890ff;
+  border-color: var(--layout-primary-color);
   box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
   transform: translateY(-1px);
 }
 
 .menu-item-active {
-  border-color: #1890ff;
+  border-color: var(--layout-primary-color);
   box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
 }
 
@@ -240,7 +251,7 @@ const handleImageError = (event: Event) => {
   left: 0;
   right: 0;
   height: 3px;
-  background: #1890ff;
+  background: var(--layout-primary-color);
 }
 
 .sidebar-collapsed .menu-item-active::before {
@@ -252,7 +263,7 @@ const handleImageError = (event: Event) => {
 .menu-item-image {
   width: 100%;
   height: 100px;
-  background: #f5f5f5;
+  background: var(--layout-background-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,7 +291,7 @@ const handleImageError = (event: Event) => {
 }
 
 .menu-item-placeholder {
-  color: #999;
+  color: var(--layout-text-color-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,14 +317,14 @@ const handleImageError = (event: Event) => {
 .menu-item-title {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--layout-text-color);
   line-height: 1.4;
   margin-bottom: 4px;
 }
 
 .menu-item-description {
   font-size: 12px;
-  color: #666;
+  color: var(--layout-text-color-secondary);
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -329,8 +340,8 @@ const handleImageError = (event: Event) => {
   transform: translateY(-50%);
   width: 32px;
   height: 32px;
-  background: #fff;
-  border: 1px solid #e8e8e8;
+  background: var(--layout-background-color);
+  border: 1px solid var(--layout-border-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -350,12 +361,12 @@ const handleImageError = (event: Event) => {
   align-items: center;
   justify-content: center;
   transition: transform 0.2s;
+  color: var(--layout-text-color);
 }
 
 .trigger-icon svg {
   display: block;
   margin: 0;
-  padding: 0;
 }
 
 .trigger-icon-collapsed {
@@ -372,11 +383,84 @@ const handleImageError = (event: Event) => {
 }
 
 .sidebar-content::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
+  background: var(--layout-border-color);
   border-radius: 2px;
 }
 
 .sidebar-content::-webkit-scrollbar-thumb:hover {
-  background: #bfbfbf;
+  background: var(--layout-text-color-secondary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .layout-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    width: 280px !important;
+  }
+
+  .layout-sidebar.sidebar-mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .sidebar-trigger {
+    display: none;
+  }
+
+  .sidebar-collapsed .sidebar-content {
+    padding: 16px;
+  }
+
+  .sidebar-collapsed .sidebar-title {
+    opacity: 1;
+  }
+
+  .sidebar-collapsed .category-title {
+    opacity: 1;
+    height: auto;
+  }
+
+  .sidebar-collapsed .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .sidebar-collapsed .menu-item-card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-collapsed .menu-item-image {
+    width: 100%;
+    height: 100px;
+    margin: 0;
+  }
+
+  .sidebar-collapsed .menu-item-content {
+    display: block;
+    padding: 12px;
+  }
+
+  .sidebar-collapsed .menu-item-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 </style>

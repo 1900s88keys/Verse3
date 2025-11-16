@@ -3,11 +3,7 @@ import { watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 
 import { menus } from '@/app/menus/Menus'
-import Layout, {
-  LayoutSidebar,
-  LayoutContent,
-  LayoutFooter,
-} from '@/shared/components/layout/Layout'
+import Layout, { LayoutSidebar, LayoutContent } from '@/shared/components/layout/Layout'
 
 const route = useRoute()
 
@@ -39,17 +35,6 @@ watch(
       <LayoutContent :loading="false" :has-error="false">
         <RouterView />
       </LayoutContent>
-    </template>
-
-    <template #footer>
-      <LayoutFooter
-        company-name="Verse3"
-        version="v1.0.0"
-        :links="[
-          { key: 'docs', label: '文档', url: '#' },
-          { key: 'github', label: 'GitHub', url: 'https://github.com' },
-        ]"
-      />
     </template>
   </Layout>
 </template>

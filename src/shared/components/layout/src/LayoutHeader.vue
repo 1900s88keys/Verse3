@@ -65,15 +65,15 @@ const handleToggle = () => {
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  height: 64px;
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
+  height: var(--layout-header-height);
+  background: var(--layout-header-background);
+  border-bottom: 1px solid var(--layout-border-color);
   position: relative;
   z-index: 100;
 }
 
 .header-bordered {
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid var(--layout-border-color);
 }
 
 .header-fixed {
@@ -115,13 +115,13 @@ const handleToggle = () => {
 }
 
 .sidebar-toggle:hover {
-  background-color: #f5f5f5;
+  background-color: var(--layout-background-color);
 }
 
 .header-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--layout-text-color);
 }
 
 .user-info {
@@ -145,7 +145,7 @@ const handleToggle = () => {
 
 .user-name {
   font-size: 14px;
-  color: #666;
+  color: var(--layout-text-color-secondary);
 }
 
 @media (max-width: 768px) {

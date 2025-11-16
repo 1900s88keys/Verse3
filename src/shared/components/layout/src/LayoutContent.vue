@@ -51,18 +51,34 @@ const handleRetry = () => {
 
 <style scoped>
 .layout-content {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
   position: relative;
   overflow-y: auto;
+  z-index: 0;
+  margin: 0;
+  flex: 1 1 auto;
+  width: auto;
+  box-sizing: border-box;
+  padding: 12px;
+  overflow: hidden;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .content-wrapper {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  padding: 2px;
+  margin: 0;
+  border: none;
+  border-radius: 10px;
+  box-shadow: var(--layout-shadow-elevation);
+  transition: box-shadow 0.3s ease;
+  overflow: hidden;
 }
 
 .content-loading,
@@ -79,14 +95,14 @@ const handleRetry = () => {
   width: 40px;
   height: 40px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #1890ff;
+  border-top: 4px solid var(--layout-primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
 }
 
 .loading-text {
-  color: #666;
+  color: var(--layout-text-color-secondary);
   font-size: 14px;
 }
 
@@ -107,13 +123,13 @@ const handleRetry = () => {
 .error-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--layout-text-color);
   margin-bottom: 8px;
 }
 
 .error-description {
   font-size: 14px;
-  color: #666;
+  color: var(--layout-text-color-secondary);
   margin-bottom: 24px;
   text-align: center;
   max-width: 400px;
@@ -121,7 +137,7 @@ const handleRetry = () => {
 
 .retry-button {
   padding: 8px 16px;
-  background: #1890ff;
+  background: var(--layout-primary-color);
   color: white;
   border: none;
   border-radius: 6px;
@@ -131,11 +147,11 @@ const handleRetry = () => {
 }
 
 .retry-button:hover {
-  background: #40a9ff;
+  background: var(--layout-primary-hover-color);
 }
 
 .retry-button:active {
-  background: #096dd9;
+  background: var(--layout-primary-active-color);
 }
 
 /* 响应式设计 */
@@ -151,15 +167,15 @@ const handleRetry = () => {
 }
 
 .layout-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--layout-background-color);
 }
 
 .layout-content::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: var(--layout-border-color);
   border-radius: 3px;
 }
 
 .layout-content::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: var(--layout-text-color-secondary);
 }
 </style>
