@@ -18,11 +18,11 @@ export class Sizes extends EventEmitter<Events> {
   }
 
   private bindEvents = () => {
-    window.addEventListener('resize', this.handleResize);
+    this.containerElement?.addEventListener('resize', this.handleResize);
   };
 
   private unbindEvents = () => {
-    window.removeEventListener('resize', this.handleResize);
+    this.containerElement?.removeEventListener('resize', this.handleResize);
   };
 
   init(containerElement: HTMLElement) {
