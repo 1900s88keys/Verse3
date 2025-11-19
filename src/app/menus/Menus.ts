@@ -1,29 +1,29 @@
-import { reactive } from "vue";
+import { reactive } from 'vue';
 
-import router from "@/app/router/Router";
-import type { MenuItem } from "@/shared/components/layout/Layout";
+import router from '@/app/router/Router';
+import type { MenuItem } from '@/shared/components/layout/Layout';
 
 const threeJsMenuItems: MenuItem[] = [
   {
-    key: "/",
-    label: "首页",
-    category: "Three.js",
-    description: "应用首页和概览",
-    image: "/images/home.svg",
+    key: '/',
+    label: '首页',
+    category: 'Three.js',
+    description: '应用首页和概览',
+    image: '/images/home.svg',
   },
   {
-    key: "/demo",
-    label: "布局演示",
-    category: "Three.js",
-    description: "布局组件演示",
-    image: "/images/layout.svg",
+    key: '/demo',
+    label: '布局演示',
+    category: 'Three.js',
+    description: '布局组件演示',
+    image: '/images/layout.svg',
   },
   {
-    key: "/reflection",
-    label: "反射演示",
-    category: "Three.js",
-    description: "反射组件演示",
-    image: "/images/reflection.svg",
+    key: '/reflection',
+    label: '反射演示',
+    category: 'Three.js',
+    description: '反射组件演示',
+    image: '/images/reflection.svg',
   },
 ];
 
@@ -31,13 +31,17 @@ const webGpuMenuItems: MenuItem[] = [];
 
 export class Menus {
   private state = reactive({
-    activeMenuKey: "/",
+    activeMenuKey: '/',
     sidebarCollapsed: false,
+    menuItems: [...threeJsMenuItems, ...webGpuMenuItems] as MenuItem[],
   });
-  menuItems: MenuItem[] = [...threeJsMenuItems, ...webGpuMenuItems];
 
   get activeMenuKey() {
     return this.state.activeMenuKey;
+  }
+
+  get menuItems() {
+    return this.state.menuItems;
   }
 
   get sidebarCollapsed() {

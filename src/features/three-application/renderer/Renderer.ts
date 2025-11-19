@@ -10,13 +10,20 @@ export class Renderer {
   get instance() {
     return this._instance;
   }
-  constructor({ canvas, sizes }: { canvas: HTMLCanvasElement; sizes: Sizes }) {
+  constructor({
+    canvas,
+    sizes,
+  }: {
+    canvas: HTMLCanvasElement | OffscreenCanvas;
+    sizes: Sizes;
+  }) {
     this.sizes = sizes;
     this._instance = new WebGLRenderer({
       canvas,
       antialias: true,
       powerPreference: 'high-performance',
     });
+    this._instance.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.bindEvent();
   }
 
