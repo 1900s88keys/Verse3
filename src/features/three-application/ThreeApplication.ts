@@ -39,19 +39,23 @@ export class ThreeApplication {
       title: '3D场景控制',
       expanded: true,
     });
+
     this.stats = new Stats();
 
     this.sizes = new Sizes();
+
     this.ticker = new Ticker();
 
     this.renderer = new Renderer({ canvas: this.canvas, sizes: this.sizes });
+
     this.camera = new Camera({ sizes: this.sizes });
+
     this.cameraControl = new CameraControl({
       pane: this.pane,
       canvas: this.canvas,
       camera: this.camera.instance,
     });
-    console.log(this.pane);
+
     this.scene = new Scene({
       pane: this.pane,
     });
@@ -59,6 +63,7 @@ export class ThreeApplication {
     this.light = new Light({
       pane: this.pane,
     });
+
     this.scene.instance.add(this.light.instance);
 
     this.bindEvent();
