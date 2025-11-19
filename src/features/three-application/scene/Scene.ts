@@ -22,7 +22,7 @@ export class Scene {
     this._instance = new ThreeScene();
     this._instance.background = new Color(sceneSetting.bgColor);
     this._instance.backgroundBlurriness = 1;
-    const envMapUrl = '/texture/royal_esplanade_1k.hdr'; // 'https://raw.githubusercontent.com/mrdoob/js/master/examples/textures/equirectangular/royal_esplanade_1k.hdr'
+    const envMapUrl = '/texture/royal_esplanade_1k.hdr';
     const envMap = new HDRLoader().load(envMapUrl, (texture) => {
       texture.mapping = EquirectangularReflectionMapping;
       this._instance.environment = texture;
@@ -40,7 +40,7 @@ export class Scene {
       this._instance.background = new Color(ev.value);
     });
     this.sceneFolder
-      .addBinding({ background: 'envMap' }, 'background', {
+      .addBinding(sceneSetting, 'backgroundType', {
         options: { envMap: 'envMap', color: 'color' },
       })
       .on('change', (ev) => {

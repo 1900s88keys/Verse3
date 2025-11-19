@@ -114,6 +114,7 @@ export class ThreeApplication {
 
     this.containerElement?.removeChild(this.canvas);
     this.containerElement?.removeChild(this.stats.dom);
+    this.containerElement?.removeChild(this.pane.element);
     this.containerElement = undefined;
   }
 }

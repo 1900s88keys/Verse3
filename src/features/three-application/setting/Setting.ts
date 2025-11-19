@@ -3,5 +3,6 @@ export const cameraSetting = {
 };
 
 export const sceneSetting = {
+  backgroundType: 'envMap',
   bgColor: '#000',
 };
