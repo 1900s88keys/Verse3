@@ -112,9 +112,10 @@ export class ThreeApplication {
     this.camera.destroy();
     this.scene.destroy();
 
-    this.containerElement?.removeChild(this.canvas);
-    this.containerElement?.removeChild(this.stats.dom);
-    this.containerElement?.removeChild(this.pane.element);
+    this.canvas.remove();
+    this.stats.dom.remove();
+    this.pane.element.remove();
+
     this.containerElement = undefined;
   }
 }

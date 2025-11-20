@@ -35,13 +35,13 @@ import {
   LayoutSidebar,
   LayoutContent,
   LayoutFooter,
-} from '@/shared/components/layout'
+} from '@/shared/components/layout';
 
 const menuItems = [
   { key: 'dashboard', label: '仪表板' },
   { key: 'users', label: '用户管理' },
   { key: 'settings', label: '设置' },
-]
+];
 </script>
 ```
 
@@ -49,7 +49,10 @@ const menuItems = [
 
 ```vue
 <template>
-  <Layout :has-sidebar="!isMobile" :sidebar-collapsed="isMobile || sidebarCollapsed">
+  <Layout
+    :has-sidebar="!isMobile"
+    :sidebar-collapsed="isMobile || sidebarCollapsed"
+  >
     <template #header>
       <LayoutHeader title="响应式应用" :show-toggle="!isMobile" />
     </template>
@@ -67,24 +70,23 @@ const menuItems = [
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue'
-import { Layout, LayoutHeader, LayoutSidebar, LayoutContent } from '@/shared/components/layout'
+import { computed, onMounted, onUnmounted } from 'vue';
+import {
+  Layout,
+  LayoutHeader,
+  LayoutSidebar,
+  LayoutContent,
+} from '@/shared/components/layout';
 
-const isMobile = ref(false)
-const sidebarCollapsed = ref(false)
-
-const checkMobile = () => {
-  isMobile.value = window.innerWidth < 768
-}
+const sidebarCollapsed = ref(false);
 
 onMounted(() => {
-  checkMobile()
-  window.addEventListener('resize', checkMobile)
-})
+  window.addEventListener('resize', checkMobile);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('resize', checkMobile)
-})
+  window.removeEventListener('resize', checkMobile);
+});
 </script>
 ```
 
@@ -98,17 +100,23 @@ onUnmounted(() => {
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { setLayoutTheme } from '@/shared/components/layout'
+import { onMounted } from 'vue';
+import { setLayoutTheme } from '@/shared/components/layout';
 
 onMounted(() => {
   // 应用暗色主题
-  setLayoutTheme('dark')
+  setLayoutTheme('dark');
 
   // 或者自定义 CSS 变量
-  document.documentElement.style.setProperty('--layout-primary-color', '#722ed1')
-  document.documentElement.style.setProperty('--layout-background-color', '#f0f2f5')
-})
+  document.documentElement.style.setProperty(
+    '--layout-primary-color',
+    '#722ed1',
+  );
+  document.documentElement.style.setProperty(
+    '--layout-background-color',
+    '#f0f2f5',
+  );
+});
 </script>
 
 <style>
@@ -132,7 +140,10 @@ onMounted(() => {
 
 ```vue
 <template>
-  <Layout :sidebar-collapsed="layoutStore.sidebarCollapsed" @toggle="layoutStore.toggleSidebar">
+  <Layout
+    :sidebar-collapsed="layoutStore.sidebarCollapsed"
+    @toggle="layoutStore.toggleSidebar"
+  >
     <template #header>
       <LayoutHeader
         title="状态管理应用"
@@ -160,21 +171,26 @@ onMounted(() => {
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useLayoutStore } from '@/stores/layout'
-import { useUserStore } from '@/stores/user'
-import { useContentStore } from '@/stores/content'
-import { Layout, LayoutHeader, LayoutSidebar, LayoutContent } from '@/shared/components/layout'
+import { computed } from 'vue';
+import { useLayoutStore } from '@/stores/layout';
+import { useUserStore } from '@/stores/user';
+import { useContentStore } from '@/stores/content';
+import {
+  Layout,
+  LayoutHeader,
+  LayoutSidebar,
+  LayoutContent,
+} from '@/shared/components/layout';
 
-const layoutStore = useLayoutStore()
-const userStore = useUserStore()
-const contentStore = useContentStore()
+const layoutStore = useLayoutStore();
+const userStore = useUserStore();
+const contentStore = useContentStore();
 
 const menuItems = computed(() => [
   { key: 'home', label: '首页' },
   { key: 'profile', label: '个人资料' },
   { key: 'settings', label: '设置' },
-])
+]);
 </script>
 ```
 
@@ -220,8 +236,12 @@ const menuItems = computed(() => [
 </template>
 
 <script setup>
-import { layoutPresets } from '@/shared/components/layout'
-import { Layout, LayoutHeader, LayoutContent } from '@/shared/components/layout'
+import { layoutPresets } from '@/shared/components/layout';
+import {
+  Layout,
+  LayoutHeader,
+  LayoutContent,
+} from '@/shared/components/layout';
 </script>
 ```
 
@@ -249,38 +269,42 @@ import { Layout, LayoutHeader, LayoutContent } from '@/shared/components/layout'
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { Layout, LayoutSidebar, LayoutContent } from '@/shared/components/layout'
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import {
+  Layout,
+  LayoutSidebar,
+  LayoutContent,
+} from '@/shared/components/layout';
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const currentRoute = computed(() => route.name)
+const currentRoute = computed(() => route.name);
 
 const dynamicMenuItems = computed(() => {
-  const baseItems = [{ key: 'dashboard', label: '仪表板' }]
+  const baseItems = [{ key: 'dashboard', label: '仪表板' }];
 
   // 根据用户权限动态添加菜单
   if (hasPermission('admin')) {
-    baseItems.push({ key: 'admin', label: '管理' })
+    baseItems.push({ key: 'admin', label: '管理' });
   }
 
   if (hasPermission('user')) {
-    baseItems.push({ key: 'profile', label: '个人资料' })
+    baseItems.push({ key: 'profile', label: '个人资料' });
   }
 
-  return baseItems
-})
+  return baseItems;
+});
 
 const handleMenuClick = (item) => {
-  router.push({ name: item.key })
-}
+  router.push({ name: item.key });
+};
 
 const hasPermission = (permission) => {
   // 检查用户权限的逻辑
-  return true
-}
+  return true;
+};
 </script>
 ```
 
@@ -307,21 +331,21 @@ const hasPermission = (permission) => {
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { layoutPresets } from '@/shared/components/layout'
-import { Layout } from '@/shared/components/layout'
+import { computed, ref } from 'vue';
+import { layoutPresets } from '@/shared/components/layout';
+import { Layout } from '@/shared/components/layout';
 
-const currentPreset = ref('admin')
+const currentPreset = ref('admin');
 
 const presets = [
   { name: 'admin', label: '管理后台' },
   { name: 'portal', label: '门户网站' },
   { name: 'mobile', label: '移动端' },
-]
+];
 
 const currentPresetConfig = computed(() => {
-  return layoutPresets[currentPreset.value]
-})
+  return layoutPresets[currentPreset.value];
+});
 </script>
 ```
 
@@ -349,10 +373,10 @@ A: 扩展 MenuItem 接口，添加 children 属性：
 
 ```typescript
 interface MenuItem {
-  key: string
-  label: string
-  icon?: string
-  children?: MenuItem[]
+  key: string;
+  label: string;
+  icon?: string;
+  children?: MenuItem[];
 }
 ```
 
@@ -371,6 +395,6 @@ A: 使用 CSS 过渡和 Vue 的 transition 组件：
 A: 使用 localStorage 保存布局状态：
 
 ```javascript
-const savedCollapsed = localStorage.getItem('sidebar-collapsed')
-sidebarCollapsed.value = savedCollapsed === 'true'
+const savedCollapsed = localStorage.getItem('sidebar-collapsed');
+sidebarCollapsed.value = savedCollapsed === 'true';
 ```

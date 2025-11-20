@@ -12,18 +12,11 @@ const threeJsMenuItems: MenuItem[] = [
     image: '/images/home.svg',
   },
   {
-    key: '/demo',
-    label: '布局演示',
+    key: '/global',
+    label: '地球',
     category: 'Three.js',
-    description: '布局组件演示',
-    image: '/images/layout.svg',
-  },
-  {
-    key: '/reflection',
-    label: '反射演示',
-    category: 'Three.js',
-    description: '反射组件演示',
-    image: '/images/reflection.svg',
+    description: '地球',
+    image: '/images/global.svg',
   },
 ];
 

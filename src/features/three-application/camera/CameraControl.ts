@@ -27,6 +27,7 @@ export class CameraControl {
     this._instance.enableDamping = true;
     this._instance.enablePan = false;
     this._instance.maxDistance = 980;
+    this._instance.autoRotate = true;
     this.pane.addBinding(this._instance, 'autoRotate', {
       label: '自动旋转',
     });
