@@ -15,19 +15,19 @@ export class Sizes extends EventEmitter<Events> {
     super();
     this.width = window.innerWidth;
     this.height = window.innerHeight;
+    this.bindEvents();
   }
 
   private bindEvents = () => {
-    this.containerElement?.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.handleResize);
   };
 
   private unbindEvents = () => {
-    this.containerElement?.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.handleResize);
   };
 
   init(containerElement: HTMLElement) {
     this.containerElement = containerElement;
-    this.bindEvents();
     this.handleResize();
   }
 
