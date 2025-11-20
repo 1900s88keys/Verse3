@@ -1,9 +1,11 @@
-import { Scene } from 'three';
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { Pane } from 'tweakpane';
 
 import { Camera } from './camera/Camera';
+import { CameraControl } from './camera/CameraControl';
+import { Light } from './light/Light';
 import { Renderer } from './renderer/Renderer';
+import { Scene } from './scene/Scene';
 import { Sizes } from './sizes/Sizes';
 import { Ticker } from './ticker/Ticker';
 
@@ -14,7 +16,7 @@ export class ThreeApplication {
 
   stats: Stats;
 
-  gui: GUI;
+  pane: Pane;
 
   sizes: Sizes;
 
@@ -24,35 +26,72 @@ export class ThreeApplication {
 
   camera: Camera;
 
+  cameraControl: CameraControl;
+
   scene: Scene;
+
+  light: Light;
 
   constructor() {
     this.canvas = document.createElement('canvas');
 
-    this.gui = new GUI();
+    this.pane = new Pane({
+      title: '3D场景控制',
+      expanded: true,
+    });
+
     this.stats = new Stats();
 
     this.sizes = new Sizes();
+
     this.ticker = new Ticker();
 
     this.renderer = new Renderer({ canvas: this.canvas, sizes: this.sizes });
+
     this.camera = new Camera({ sizes: this.sizes });
 
-    this.scene = new Scene();
+    this.cameraControl = new CameraControl({
+      pane: this.pane,
+      canvas: this.canvas,
+      camera: this.camera.instance,
+    });
+
+    this.scene = new Scene({
+      pane: this.pane,
+    });
+
+    this.light = new Light({
+      pane: this.pane,
+    });
+
+    this.scene.instance.add(this.light.instance);
 
     this.bindEvent();
   }
 
-  init(containerElement: HTMLElement) {
+  private bindEvent() {
+    this.ticker.on('tick', this.handleTick);
+  }
+
+  private unbindEvent() {
+    this.ticker.off('tick', this.handleTick);
+  }
+
+  private handleTick = () => {
+    this.renderer.instance.render(this.scene.instance, this.camera.instance);
+    this.stats.update();
+  };
+
+  public init(containerElement: HTMLElement) {
     this.containerElement = containerElement;
     this.containerElement.appendChild(this.canvas);
 
     this.sizes.init(this.containerElement);
 
-    this.containerElement.appendChild(this.gui.domElement);
-    this.gui.domElement.style.position = 'absolute';
-    this.gui.domElement.style.right = '2px';
-    this.gui.domElement.style.top = '2px';
+    this.containerElement.appendChild(this.pane.element);
+    this.pane.element.style.position = 'absolute';
+    this.pane.element.style.top = '2px';
+    this.pane.element.style.right = '2px';
 
     this.containerElement.appendChild(this.stats.dom);
     this.stats.dom.style.position = 'absolute';
@@ -62,32 +101,21 @@ export class ThreeApplication {
     this.ticker.start();
   }
 
-  bindEvent() {
-    this.ticker.on('tick', this.handleTick);
-  }
-
-  unbindEvent() {
-    this.ticker.off('tick', this.handleTick);
-  }
-
-  handleTick = () => {
-    this.renderer.instance.render(this.scene, this.camera.instance);
-    this.stats.update();
-  };
-
-  destroy() {
+  public destroy() {
     this.unbindEvent();
     this.ticker.destroy();
 
-    this.gui.destroy();
+    this.pane.dispose();
     this.sizes.destroy();
 
     this.renderer.destroy();
     this.camera.destroy();
-    this.scene.clear();
+    this.scene.destroy();
 
-    this.containerElement?.removeChild(this.canvas);
-    this.containerElement?.removeChild(this.stats.dom);
+    this.canvas.remove();
+    this.stats.dom.remove();
+    this.pane.element.remove();
+
     this.containerElement = undefined;
   }
 }

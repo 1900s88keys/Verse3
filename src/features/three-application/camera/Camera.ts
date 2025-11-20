@@ -1,5 +1,7 @@
 import { PerspectiveCamera } from 'three';
 
+import { cameraSetting } from '../setting/Setting';
+
 import type { Sizes } from '../sizes/Sizes';
 
 export class Camera {
@@ -26,6 +28,16 @@ export class Camera {
     ];
 
     const camera = new PerspectiveCamera(fov, aspect, near, far);
+    camera.lookAt(
+      cameraSetting.defaultLookAt.x,
+      cameraSetting.defaultLookAt.y,
+      cameraSetting.defaultLookAt.z,
+    );
+    camera.position.set(
+      cameraSetting.defaultPosition.x,
+      cameraSetting.defaultPosition.y,
+      cameraSetting.defaultPosition.z,
+    );
     return camera;
   }
 
