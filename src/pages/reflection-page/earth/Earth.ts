@@ -69,7 +69,6 @@ export class Earth {
     this.flyLine = new FlyLine({
       setting: this.setting,
     });
-    console.log(this.flyLine);
     this.container.add(this.flyLine);
     this.bindEvents();
   }
