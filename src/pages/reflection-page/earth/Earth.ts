@@ -1,9 +1,7 @@
 import {
   AdditiveBlending,
   BackSide,
-  BufferGeometry,
   Color,
-  Material,
   Mesh,
   MeshPhongMaterial,
   Object3D,
@@ -21,11 +19,7 @@ import { Country } from './entity/Country';
 import { FlyLine } from './entity/FlyLine';
 import { SETTING, type Setting } from './setting/Setting';
 
-interface Entity<Geo extends BufferGeometry, Mat extends Material> {
-  mesh: Mesh;
-  geometry: Geo;
-  material: Mat;
-}
+import type { Entity } from './type/Type';
 
 export class Earth {
   container: Object3D;
@@ -38,9 +32,9 @@ export class Earth {
 
   private setting: Setting;
 
-  private earthEntity: Entity<SphereGeometry, MeshPhongMaterial>;
+  private earthEntity: Entity<Mesh, SphereGeometry, MeshPhongMaterial>;
 
-  private atmosphereEntity: Entity<SphereGeometry, ShaderMaterial>;
+  private atmosphereEntity: Entity<Mesh, SphereGeometry, ShaderMaterial>;
 
   private country: Country;
 
@@ -75,6 +69,7 @@ export class Earth {
     this.flyLine = new FlyLine({
       setting: this.setting,
     });
+    console.log(this.flyLine);
     this.container.add(this.flyLine);
     this.bindEvents();
   }
@@ -145,10 +140,17 @@ export class Earth {
 
   destroy() {
     this.unbindEvents();
+    this.container.remove(this.earthEntity.mesh);
     this.earthEntity.geometry.dispose();
     this.earthEntity.material.dispose();
+
+    this.container.remove(this.atmosphereEntity.mesh);
     this.atmosphereEntity.geometry.dispose();
     this.atmosphereEntity.material.dispose();
+
+    this.container.remove(this.flyLine);
     this.flyLine.destroy();
+
+    this.container.children = [];
   }
 }

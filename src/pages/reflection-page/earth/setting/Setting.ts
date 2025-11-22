@@ -32,6 +32,7 @@ export const SETTING = {
     flyLineData: arcsData,
     flyingLineLength: 0.4,
     flowSpeed: 0.4,
+    growthDuration: 0.5,
     showFlyingParticle: true,
     particleSize: 0.5,
   },

@@ -23,15 +23,16 @@ import { latLngToVector3 } from '@/shared/utils/geo/Geo';
 
 import type { Arc } from '../data/arcs';
 import type { Setting } from '../setting/Setting';
+import type { Entity } from '../type/Type';
 
 export class FlyLine extends Object3D {
   private setting: Setting;
 
   private time: number;
 
-  private flyLineMaterial: ShaderMaterial;
-
   private flyLineGeometries: BufferGeometry[] = [];
+
+  private flyLineGroupEntity: Entity<Line, BufferGeometry, ShaderMaterial>;
 
   constructor({ setting }: { setting: Setting }) {
     super();
@@ -40,22 +41,11 @@ export class FlyLine extends Object3D {
     this.setting = setting;
     this.name = 'flyLine';
 
-    this.flyLineMaterial = new ShaderMaterial({
-      blending: AdditiveBlending,
-      side: BackSide,
-      transparent: true,
-      uniforms: {
-        flowLength: { value: this.setting.flyLineAttr.flyingLineLength },
-        time: { value: 0.0 },
-      },
-      vertexShader: flyLineVertexShader,
-      fragmentShader: flyLineFragmentShader,
-    });
-
-    this.createFlyLines();
+    this.flyLineGroupEntity = this.createFlyLines();
+    this.add(this.flyLineGroupEntity.mesh);
   }
 
-  createFlyLines() {
+  private createFlyLines() {
     this.setting.flyLineAttr.flyLineData.forEach((line) => {
       this.createFlyLine(line);
     });
@@ -63,12 +53,29 @@ export class FlyLine extends Object3D {
       this.flyLineGeometries,
       false,
     );
-    const staticLine = new Line(geometries, this.flyLineMaterial);
-    staticLine.renderOrder = 4;
-    this.add(staticLine);
+
+    const material = new ShaderMaterial({
+      blending: AdditiveBlending,
+      side: BackSide,
+      transparent: true,
+      uniforms: {
+        flowLength: { value: this.setting.flyLineAttr.flyingLineLength },
+        growthDuration: { value: this.setting.flyLineAttr.growthDuration },
+        time: { value: 0.0 },
+      },
+      vertexShader: flyLineVertexShader,
+      fragmentShader: flyLineFragmentShader,
+    });
+    const flyLineGroupMesh = new Line(geometries, material);
+    flyLineGroupMesh.renderOrder = 4;
+    return {
+      mesh: flyLineGroupMesh,
+      geometry: geometries,
+      material,
+    };
   }
 
-  createFlyLine(line: Arc) {
+  private createFlyLine(line: Arc) {
     const startPos = latLngToVector3(
       line.startLat,
       line.startLng,
@@ -138,7 +145,7 @@ export class FlyLine extends Object3D {
     this.flyLineGeometries.push(lineGeometry);
   }
 
-  createParticle(color: ColorRepresentation) {
+  private createParticle(color: ColorRepresentation) {
     const geometry = new SphereGeometry(
       this.setting.flyLineAttr.particleSize,
       8,
@@ -154,7 +161,7 @@ export class FlyLine extends Object3D {
     return new Mesh(geometry, material);
   }
 
-  createCurve(
+  private createCurve(
     startPos: Vector3,
     endPos: Vector3,
     angle: number,
@@ -201,14 +208,17 @@ export class FlyLine extends Object3D {
 
   update(delta: number) {
     this.time += delta;
-    if (this.flyLineMaterial.uniforms.time) {
-      this.flyLineMaterial.uniforms.time.value +=
+    if (this.flyLineGroupEntity.material.uniforms.time) {
+      this.flyLineGroupEntity.material.uniforms.time.value +=
         this.setting.flyLineAttr.flowSpeed / 100;
     }
   }
 
   destroy() {
-    this.flyLineMaterial.dispose();
+    this.remove(this.flyLineGroupEntity.mesh);
+    this.flyLineGroupEntity.geometry.dispose();
+    this.flyLineGroupEntity.material.dispose();
+
     this.flyLineGeometries.forEach((geometry) => {
       geometry.dispose();
     });
