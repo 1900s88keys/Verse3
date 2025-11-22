@@ -22,7 +22,7 @@ export class Scene {
     this._instance = new ThreeScene();
     this._instance.background = new Color(sceneSetting.bgColor);
     this._instance.backgroundBlurriness = 1;
-    const envMapUrl = '/texture/royal_esplanade_1k.hdr';
+    const envMapUrl = import.meta.env.BASE_URL + 'texture/royal_esplanade_1k.hdr';
     const envMap = new HDRLoader().load(envMapUrl, (texture) => {
       texture.mapping = EquirectangularReflectionMapping;
       this._instance.environment = texture;
