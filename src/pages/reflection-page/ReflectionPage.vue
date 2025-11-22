@@ -10,6 +10,7 @@ import { Earth } from '@/pages/reflection-page/earth/Earth';
 const threeApplication = new ThreeApplication();
 const earth = new Earth({
   sizes: threeApplication.sizes,
+  ticker: threeApplication.ticker,
   pane: threeApplication.pane,
 });
 
@@ -25,6 +26,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+  earth.destroy();
   threeApplication.destroy();
 });
 </script>

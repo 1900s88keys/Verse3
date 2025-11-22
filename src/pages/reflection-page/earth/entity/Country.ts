@@ -1,33 +1,22 @@
 import {
   BufferGeometry,
   Color,
-  Group,
+  Object3D,
   Line,
   LineBasicMaterial,
-  Vector3,
 } from 'three';
 
-import type { Geography } from '../../geo/Geography';
+import { latLngToVector3 } from '@/shared/utils/geo/Geo';
+
 import type { Setting } from '../setting/Setting';
 
-export class Country {
-  countriesGroup: Group;
-
+export class Country extends Object3D {
   private setting: Setting;
 
-  private geography: Geography;
-
-  constructor({
-    setting,
-    geography,
-  }: {
-    setting: Setting;
-    geography: Geography;
-  }) {
+  constructor({ setting }: { setting: Setting }) {
+    super();
     this.setting = setting;
-    this.geography = geography;
-    this.countriesGroup = new Group();
-    this.countriesGroup.name = 'Countries';
+    this.name = 'Countries';
     this.createCountries();
   }
 
@@ -74,37 +63,22 @@ export class Country {
       depthTest: true,
       depthWrite: false,
     });
+
     coordinates.forEach((polygon) => {
       polygon.forEach((ring) => {
         if (ring.length < 3) return;
 
         const points = ring.map((coord) => {
           const [lng, lat] = coord as [number, number];
-          return this.latLngToVector3(
-            lat,
-            lng,
-            this.setting.earthAttr.radius + 0.1,
-          );
+          return latLngToVector3(lat, lng, this.setting.earthAttr.radius + 0.1);
         });
 
         const geometry = new BufferGeometry().setFromPoints(points);
 
         const line = new Line(geometry, material);
         line.renderOrder = 1;
-        this.countriesGroup.add(line);
+        this.add(line);
       });
     });
-  }
-
-  // 工具方法
-  latLngToVector3(lat: number, lng: number, radius: number) {
-    const phi = (90 - lat) * (Math.PI / 180);
-    const theta = (lng + 180) * (Math.PI / 180);
-
-    const x = -(radius * Math.sin(phi) * Math.cos(theta));
-    const z = radius * Math.sin(phi) * Math.sin(theta);
-    const y = radius * Math.cos(phi);
-
-    return new Vector3(x, y, z);
   }
 }
