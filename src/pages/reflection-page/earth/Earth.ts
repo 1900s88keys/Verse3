@@ -1,32 +1,25 @@
 import {
   AdditiveBlending,
   BackSide,
-  BufferGeometry,
   Color,
-  Material,
   Mesh,
   MeshPhongMaterial,
   Object3D,
   ShaderMaterial,
   SphereGeometry,
 } from 'three';
+import { FolderApi, Pane } from 'tweakpane';
 
 import type { Sizes } from '@/features/three-application/sizes/Sizes';
+import type { Ticker } from '@/features/three-application/ticker/Ticker';
 import atmosphereFragmentShader from '@/shared/shaders/glsl/atmosphere/fragment.glsl?raw';
 import atmosphereVertexShader from '@/shared/shaders/glsl/atmosphere/vertex.glsl?raw';
 
-import { Geography } from '../geo/Geography';
-
 import { Country } from './entity/Country';
+import { FlyLine } from './entity/FlyLine';
 import { SETTING, type Setting } from './setting/Setting';
 
-import type { FolderApi, Pane } from 'tweakpane';
-
-interface Entity<Geo extends BufferGeometry, Mat extends Material> {
-  mesh: Mesh;
-  geometry: Geo;
-  material: Mat;
-}
+import type { Entity } from './type/Type';
 
 export class Earth {
   container: Object3D;
@@ -35,21 +28,31 @@ export class Earth {
 
   private sizes: Sizes;
 
+  private ticker: Ticker;
+
   private setting: Setting;
 
-  private geography: Geography;
+  private earthEntity: Entity<Mesh, SphereGeometry, MeshPhongMaterial>;
 
-  private earthEntity: Entity<SphereGeometry, MeshPhongMaterial>;
-
-  private atmosphereEntity: Entity<SphereGeometry, ShaderMaterial>;
+  private atmosphereEntity: Entity<Mesh, SphereGeometry, ShaderMaterial>;
 
   private country: Country;
 
-  constructor({ sizes, pane }: { sizes: Sizes; pane: Pane }) {
+  private flyLine: FlyLine;
+
+  constructor({
+    sizes,
+    ticker,
+    pane,
+  }: {
+    sizes: Sizes;
+    ticker: Ticker;
+    pane: Pane;
+  }) {
+    this.ticker = ticker;
     this.sceneFolder = pane.addFolder({ title: 'Earth' });
     this.sizes = sizes;
     this.setting = SETTING;
-    this.geography = new Geography(this.setting.earthAttr.radius);
 
     this.container = new Object3D();
     this.earthEntity = this.createEarth();
@@ -60,12 +63,26 @@ export class Earth {
 
     this.country = new Country({
       setting: this.setting,
-      geography: this.geography,
     });
-    this.container.add(this.country.countriesGroup);
+    this.container.add(this.country);
+
+    this.flyLine = new FlyLine({
+      setting: this.setting,
+    });
+    console.log(this.flyLine);
+    this.container.add(this.flyLine);
+    this.bindEvents();
   }
 
-  createEarth() {
+  private bindEvents() {
+    this.ticker.on('tick', this.update);
+  }
+
+  private unbindEvents() {
+    this.ticker.off('tick', this.update);
+  }
+
+  private createEarth() {
     const earthGeometry = new SphereGeometry(
       this.setting.earthAttr.radius,
       this.setting.earthAttr.segments,
@@ -88,7 +105,7 @@ export class Earth {
     };
   }
 
-  createAtmosphere() {
+  private createAtmosphere() {
     const atmosphereGeometry = new SphereGeometry(
       this.setting.earthAttr.radius *
         (1 + this.setting.atmosphereAttr.atmosphereAltitude),
@@ -117,10 +134,23 @@ export class Earth {
     };
   }
 
+  update = (delta: number) => {
+    this.flyLine.update(delta);
+  };
+
   destroy() {
+    this.unbindEvents();
+    this.container.remove(this.earthEntity.mesh);
     this.earthEntity.geometry.dispose();
     this.earthEntity.material.dispose();
+
+    this.container.remove(this.atmosphereEntity.mesh);
     this.atmosphereEntity.geometry.dispose();
     this.atmosphereEntity.material.dispose();
+
+    this.container.remove(this.flyLine);
+    this.flyLine.destroy();
+
+    this.container.children = [];
   }
 }
