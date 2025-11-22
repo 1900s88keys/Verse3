@@ -9,14 +9,14 @@ const threeJsMenuItems: MenuItem[] = [
     label: '首页',
     category: 'Three.js',
     description: '应用首页和概览',
-    image: '/images/home.svg',
+    image: import.meta.env.BASE_URL + 'images/home.svg',
   },
   {
     key: '/global',
     label: '地球',
     category: 'Three.js',
     description: '地球',
-    image: '/images/global.svg',
+    image: import.meta.env.BASE_URL + 'images/global.svg',
   },
 ];
 
