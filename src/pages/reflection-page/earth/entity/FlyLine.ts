@@ -223,5 +223,6 @@ export class FlyLine extends Object3D {
       geometry.dispose();
     });
     this.flyLineGeometries = [];
+    this.children = [];
   }
 }
