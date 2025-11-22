@@ -15,5 +15,8 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[glsl]": {
+    "editor.defaultFormatter": "raczzalan.webgl-glsl-editor"
   }
 }
