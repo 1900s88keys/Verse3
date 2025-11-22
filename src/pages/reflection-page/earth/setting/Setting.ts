@@ -30,7 +30,7 @@ export const SETTING = {
   flyLineAttr: {
     flyLineOpacity: 0.5,
     flyLineData: arcsData,
-    flyingLineLength: 0.4,
+    flyingLineLength: 0.2,
     flowSpeed: 0.4,
     growthDuration: 0.5,
     showFlyingParticle: true,
