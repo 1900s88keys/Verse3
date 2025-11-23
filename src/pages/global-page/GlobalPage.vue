@@ -4,8 +4,11 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
+import { sceneSetting } from '@/features/three-application/setting/Setting';
 import { ThreeApplication } from '@/features/three-application/ThreeApplication';
 import { Earth } from '@/pages/global-page/earth/Earth';
+
+sceneSetting.bgColor = '#262f4c';
 
 const threeApplication = new ThreeApplication();
 const earth = new Earth({
