@@ -81,4 +81,14 @@ export class Country extends Object3D {
       });
     });
   }
+
+  destroy() {
+    this.children.forEach((child) => {
+      if (child instanceof Line) {
+        child.geometry.dispose();
+        child.material.dispose();
+      }
+    });
+    this.children = [];
+  }
 }

@@ -155,7 +155,7 @@ export class FlyLine extends Object3D {
       fragmentShader: particleFragmentShader,
     });
     const particlesMesh = new Mesh(geometries, material);
-    particlesMesh.renderOrder = 4;
+    particlesMesh.renderOrder = 3;
 
     return {
       mesh: particlesMesh,

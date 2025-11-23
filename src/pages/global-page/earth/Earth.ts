@@ -150,6 +150,9 @@ export class Earth {
     this.container.remove(this.flyLine);
     this.flyLine.destroy();
 
+    this.container.remove(this.country);
+    this.country.destroy();
+
     this.container.children = [];
   }
 }
