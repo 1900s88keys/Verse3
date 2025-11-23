@@ -19,8 +19,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['vue', 'vue-router'],
+          'vue-core': ['vue', 'vue-router'],
           three: ['three'],
+          tweakpane: ['tweakpane', '@tweakpane/core'],
         },
       },
     },

@@ -1,21 +1,20 @@
-uniform float time;
+uniform float currentTime;
 uniform float flowLength;
 uniform float growthDuration;
 
 varying vec3 vLineColor;
-varying vec3 vFlowColor;
 varying vec2 vUv;
 void main() {
     // 计算线段生长的进度（0.0-1.0）
-    float growthProgress = clamp(time / growthDuration, 0.0, 1.0);
+    float growthProgress = clamp(currentTime / growthDuration, 0.0, 1.0);
 
     // 计算线段生长的末端位置
     float growthEnd = growthProgress;
 
     // 计算流动效果的位置，确保从线段开始处出现
     // 只有在线段完全生长后（growthProgress >= 1.0），才开始流动效果
-    float flowAnimationTime = max(0.0, time - growthDuration);
-    float flowOffset = mod(flowAnimationTime, 1.0 + flowLength + flowLength / 10.0) - flowLength;
+    float flowAnimationTime = max(0.0, currentTime - growthDuration);
+    float flowOffset = mod(flowAnimationTime, 1.0 + flowLength) - flowLength;
 
     // 计算当前UV相对于流动起始位置的偏移
     float offset = vUv.y - flowOffset;
@@ -36,7 +35,7 @@ void main() {
         lineAlpha = 0.0; // 线段未生长到的部分透明
     }
     vec4 uBaseColor = vec4(vLineColor, lineAlpha);
-    vec4 gradientColor = vec4(vFlowColor, alpha);
+    vec4 gradientColor = vec4(vLineColor, alpha);
 
     gl_FragColor = gradientColor + uBaseColor;
 }
