@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 
+import globalImage from '@/app/menus/images/global.png?url';
 import router from '@/app/router/Router';
 import type { MenuItem } from '@/shared/components/layout/Layout';
 
@@ -16,7 +17,7 @@ const threeJsMenuItems: MenuItem[] = [
     label: '地球',
     category: 'Three.js',
     description: '地球',
-    image: import.meta.env.BASE_URL + 'images/global.svg',
+    image: globalImage,
   },
 ];
 

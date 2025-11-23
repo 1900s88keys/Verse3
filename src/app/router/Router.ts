@@ -12,17 +12,9 @@ const router = createRouter({
       },
     },
     {
-      path: '/demo',
-      name: 'demo',
-      component: () => import('@/pages/layout-demo/LayoutDemo.vue'),
-      meta: {
-        title: '布局演示',
-      },
-    },
-    {
       path: '/global',
       name: 'global',
-      component: () => import('@/pages/reflection-page/ReflectionPage.vue'),
+      component: () => import('@/pages/global-page/GlobalPage.vue'),
       meta: {
         title: '地球',
       },
