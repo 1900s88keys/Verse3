@@ -133,8 +133,8 @@ export class Earth {
     };
   }
 
-  update = (delta: number) => {
-    this.flyLine.update(delta);
+  update = () => {
+    this.flyLine.update();
   };
 
   destroy() {
