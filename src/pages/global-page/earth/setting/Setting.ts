@@ -1,7 +1,25 @@
-import { arcsData } from '../data/arcs';
+import { arcsData, majorTradeCities } from '../data/arcs';
 import countries from '../data/globe.json';
 
 export type Setting = typeof SETTING;
+
+// 添加主要贸易城市
+const pointsData = majorTradeCities.map((city) => {
+  const color =
+    city.importance === 'high'
+      ? '#58fff3'
+      : city.importance === 'medium'
+        ? '#eaff4e'
+        : '#c184ff';
+  return {
+    lat: city.lat,
+    lng: city.lng,
+    color: color,
+    size: city.importance === 'high' ? 1.5 : 1,
+    name: city.name,
+    region: city.region,
+  };
+});
 
 export const SETTING = {
   /** 地图基础属性 **/
@@ -35,6 +53,12 @@ export const SETTING = {
     growthDuration: 0.5,
     showFlyingParticle: true,
     particleSize: 0.5,
+  },
+
+  pointCloudAttr: {
+    pointsData: [...pointsData],
+    pointSize: 0.5,
+    pointColor: '#7df9ff',
   },
 };
 

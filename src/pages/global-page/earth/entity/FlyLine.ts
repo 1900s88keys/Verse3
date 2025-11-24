@@ -4,11 +4,10 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  CubicBezierCurve3,
   Line,
   Mesh,
+  MeshBasicMaterial,
   Object3D,
-  QuadraticBezierCurve3,
   ShaderMaterial,
   SphereGeometry,
   Vector3,
@@ -22,16 +21,27 @@ import particleFragmentShader from '@/shared/shaders/glsl/particle/fragment.glsl
 import particleVertexShader from '@/shared/shaders/glsl/particle/vertex.glsl?raw';
 import { latLngToVector3 } from '@/shared/utils/geo/Geo';
 
+import { GreatCircleCurve3 } from '../curve/GreatCircleCurve3';
+
 import type { Arc } from '../data/arcs';
 import type { Setting } from '../setting/Setting';
 import type { Entity } from '../type/Type';
+
+interface Point {
+  lat: number;
+  lng: number;
+  color: string;
+  size: number;
+  name: string;
+  region: string;
+}
 
 export class FlyLine extends Object3D {
   private setting: Setting;
 
   private currentTime: number;
 
-  private curveList: (CubicBezierCurve3 | QuadraticBezierCurve3)[] = [];
+  private curveList: GreatCircleCurve3[] = [];
 
   // 飞线
   private flyLineGroupEntity: Entity<Line, BufferGeometry, ShaderMaterial>;
@@ -40,6 +50,9 @@ export class FlyLine extends Object3D {
   private singleParticlePosCount: number = 0;
 
   private particleEntity: Entity<Mesh, BufferGeometry, ShaderMaterial>;
+
+  // 点
+  private pointEntity: Entity<Mesh, BufferGeometry, MeshBasicMaterial>;
 
   constructor({ setting }: { setting: Setting }) {
     super();
@@ -53,8 +66,33 @@ export class FlyLine extends Object3D {
 
     this.particleEntity = this.createParticles();
     this.add(this.particleEntity.mesh);
+
+    this.pointEntity = this.createPoints();
+    this.add(this.pointEntity.mesh);
   }
 
+  // 创建曲线
+  private createCurve(line: Arc) {
+    const startPos = latLngToVector3(
+      line.startLat,
+      line.startLng,
+      this.setting.earthAttr.radius,
+    );
+    const endPos = latLngToVector3(
+      line.endLat,
+      line.endLng,
+      this.setting.earthAttr.radius,
+    );
+
+    return new GreatCircleCurve3(
+      startPos,
+      endPos,
+      this.setting.earthAttr.radius,
+      1.3,
+    );
+  }
+
+  // 创建飞线
   private createFlyLines() {
     const flyLineGeometries = this.setting.flyLineAttr.flyLineData.map(
       (line) => {
@@ -94,10 +132,7 @@ export class FlyLine extends Object3D {
     };
   }
 
-  private createFlyLineGeometry(
-    curve: CubicBezierCurve3 | QuadraticBezierCurve3,
-    color: string,
-  ) {
+  private createFlyLineGeometry(curve: GreatCircleCurve3, color: string) {
     const points = curve.getPoints(100);
 
     // 创建静态弧线（背景轨迹）
@@ -131,6 +166,7 @@ export class FlyLine extends Object3D {
     return lineGeometry;
   }
 
+  // 创建移动的粒子
   private createParticles() {
     const particleGeometries = this.setting.flyLineAttr.flyLineData.map(
       (line) => {
@@ -183,63 +219,7 @@ export class FlyLine extends Object3D {
     }
 
     geometry.setAttribute('color', new BufferAttribute(colorArray, 3));
-
     return geometry;
-  }
-
-  private createCurve(line: Arc) {
-    const startPos = latLngToVector3(
-      line.startLat,
-      line.startLng,
-      this.setting.earthAttr.radius,
-    );
-    const endPos = latLngToVector3(
-      line.endLat,
-      line.endLng,
-      this.setting.earthAttr.radius,
-    );
-
-    // 计算两点间的角度和弧线
-    const angle = startPos.angleTo(endPos);
-    const arcHeight = this.setting.earthAttr.radius * (line.arcAlt || 0.1);
-    const angleThreshold = Math.PI / 3; // 60度
-
-    if (angle > angleThreshold) {
-      // 三次贝塞尔曲线
-      const midPoint = new Vector3()
-        .addVectors(startPos, endPos)
-        .multiplyScalar(0.5);
-      midPoint
-        .normalize()
-        .multiplyScalar(this.setting.earthAttr.radius + arcHeight);
-
-      const controlPoint1 = new Vector3().lerpVectors(startPos, midPoint, 0.5);
-      controlPoint1
-        .normalize()
-        .multiplyScalar(this.setting.earthAttr.radius + arcHeight);
-
-      const controlPoint2 = new Vector3().lerpVectors(midPoint, endPos, 0.5);
-      controlPoint2
-        .normalize()
-        .multiplyScalar(this.setting.earthAttr.radius + arcHeight);
-
-      return new CubicBezierCurve3(
-        startPos,
-        controlPoint1,
-        controlPoint2,
-        endPos,
-      );
-    } else {
-      // 二次贝塞尔曲线
-      const midPoint = new Vector3()
-        .addVectors(startPos, endPos)
-        .multiplyScalar(0.5);
-      midPoint
-        .normalize()
-        .multiplyScalar(this.setting.earthAttr.radius + arcHeight);
-
-      return new QuadraticBezierCurve3(startPos, midPoint, endPos);
-    }
   }
 
   private updateParticles() {
@@ -294,6 +274,79 @@ export class FlyLine extends Object3D {
     }
   }
 
+  // 创建地区点
+  private createPoints() {
+    // 去重处理
+    const uniquePoints = this.removeDuplicatePoints(
+      this.setting.pointCloudAttr.pointsData,
+    );
+
+    const material = new MeshBasicMaterial({
+      transparent: true,
+      opacity: 0.8,
+      depthWrite: false,
+      vertexColors: true,
+    });
+    const geometries = uniquePoints.map((point) => {
+      return this.createPointGeometry(point);
+    });
+
+    const mergeGeometries = BufferGeometryUtils.mergeGeometries(
+      geometries,
+      false,
+    );
+
+    geometries.forEach((geometry) => {
+      geometry.dispose();
+    });
+
+    const pointMesh = new Mesh(mergeGeometries, material);
+    return {
+      mesh: pointMesh,
+      geometry: mergeGeometries,
+      material,
+    };
+  }
+
+  private createPointGeometry(point: Point) {
+    const geometry = new SphereGeometry(
+      this.setting.pointCloudAttr.pointSize,
+      8,
+      8,
+    );
+    const position = latLngToVector3(
+      point.lat,
+      point.lng,
+      this.setting.earthAttr.radius + 0.5,
+    );
+    const colorArray = new Float32Array(
+      (geometry.attributes.position?.count ?? 0) * 3,
+    );
+    const colorVector = new Vector3().setFromColor(
+      new Color(point.color || '#fff'),
+    );
+    for (let i = 0; i < colorArray.length; i++) {
+      colorArray[i * 3] = colorVector.x;
+      colorArray[i * 3 + 1] = colorVector.y;
+      colorArray[i * 3 + 2] = colorVector.z;
+    }
+    geometry.setAttribute('color', new BufferAttribute(colorArray, 3));
+    geometry.translate(position.x, position.y, position.z);
+    return geometry;
+  }
+
+  private removeDuplicatePoints(points: Point[]) {
+    const seen = new Set();
+    return points.filter((point) => {
+      const key = `${point.lat},${point.lng}`;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  }
+
   update() {
     this.currentTime += this.setting.flyLineAttr.flowSpeed / 1000;
     if (this.flyLineGroupEntity.material.uniforms.currentTime) {
@@ -314,6 +367,11 @@ export class FlyLine extends Object3D {
     this.particleEntity.geometry.dispose();
     this.particleEntity.material.dispose();
 
+    this.remove(this.pointEntity.mesh);
+    this.pointEntity.geometry.dispose();
+    this.pointEntity.material.dispose();
+
+    this.curveList = [];
     this.children = [];
   }
 }
