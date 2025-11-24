@@ -97,7 +97,7 @@ export class Earth {
     });
 
     const earthMesh = new Mesh(earthGeometry, earthMaterial);
-    earthMesh.name = 'earthMesh';
+    earthMesh.name = 'EarthMesh';
 
     return {
       mesh: earthMesh,
@@ -128,7 +128,7 @@ export class Earth {
     });
 
     const atmosphereMesh = new Mesh(atmosphereGeometry, atmosphereMaterial);
-    atmosphereMesh.name = 'atmosphere';
+    atmosphereMesh.name = 'Atmosphere';
 
     return {
       mesh: atmosphereMesh,

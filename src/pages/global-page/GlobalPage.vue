@@ -17,6 +17,8 @@ const earth = new Earth({
   pane: threeApplication.pane,
 });
 
+console.log(earth.container);
+
 const containerRef = ref<HTMLDivElement>();
 
 onMounted(async () => {
