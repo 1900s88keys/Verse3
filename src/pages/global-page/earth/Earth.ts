@@ -55,6 +55,7 @@ export class Earth {
     this.setting = SETTING;
 
     this.container = new Object3D();
+
     this.earthEntity = this.createEarth();
     this.container.add(this.earthEntity.mesh);
 
@@ -96,6 +97,7 @@ export class Earth {
     });
 
     const earthMesh = new Mesh(earthGeometry, earthMaterial);
+    earthMesh.name = 'earthMesh';
 
     return {
       mesh: earthMesh,
@@ -126,6 +128,8 @@ export class Earth {
     });
 
     const atmosphereMesh = new Mesh(atmosphereGeometry, atmosphereMaterial);
+    atmosphereMesh.name = 'atmosphere';
+
     return {
       mesh: atmosphereMesh,
       geometry: atmosphereGeometry,
