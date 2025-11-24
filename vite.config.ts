@@ -26,7 +26,7 @@ export default defineConfig({
       },
     },
   },
-  base: process.env.NODE_ENV === 'production' ? '/verse3/' : '/',
+  base: '/',
   server: {
     port: 5173,
     host: true,
