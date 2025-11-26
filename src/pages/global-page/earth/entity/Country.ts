@@ -5,7 +5,6 @@ import {
   Line,
   LineBasicMaterial,
 } from 'three';
-import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
 
 import { latLngToVector3 } from '@/shared/utils/geo/Geo';
 
@@ -65,7 +64,6 @@ export class Country extends Object3D {
       depthWrite: false,
     });
 
-    const geometries: BufferGeometry[] = [];
     coordinates.forEach((polygon) => {
       polygon.forEach((ring) => {
         if (ring.length < 3) return;
@@ -76,14 +74,11 @@ export class Country extends Object3D {
         });
 
         const geometry = new BufferGeometry().setFromPoints(points);
-        geometries.push(geometry);
+        const line = new Line(geometry, material);
+        this.add(line);
+        line.renderOrder = 1;
       });
     });
-    const geometry = BufferGeometryUtils.mergeGeometries(geometries, false);
-
-    const line = new Line(geometry, material);
-    line.renderOrder = 1;
-    this.add(line);
   }
 
   destroy() {
