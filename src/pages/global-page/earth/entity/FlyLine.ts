@@ -6,7 +6,6 @@ import {
   Color,
   Line,
   Mesh,
-  MeshBasicMaterial,
   Object3D,
   ShaderMaterial,
   SphereGeometry,
@@ -27,15 +26,6 @@ import type { Arc } from '../data/arcs';
 import type { Setting } from '../setting/Setting';
 import type { Entity } from '../type/Type';
 
-interface Point {
-  lat: number;
-  lng: number;
-  color: string;
-  size: number;
-  name: string;
-  region: string;
-}
-
 export class FlyLine extends Object3D {
   private setting: Setting;
 
@@ -51,9 +41,6 @@ export class FlyLine extends Object3D {
 
   private particleEntity: Entity<Mesh, BufferGeometry, ShaderMaterial>;
 
-  // 点
-  private pointEntity: Entity<Mesh, BufferGeometry, MeshBasicMaterial>;
-
   constructor({ setting }: { setting: Setting }) {
     super();
     this.currentTime = 0;
@@ -66,9 +53,6 @@ export class FlyLine extends Object3D {
 
     this.particleEntity = this.createParticles();
     this.add(this.particleEntity.mesh);
-
-    this.pointEntity = this.createPoints();
-    this.add(this.pointEntity.mesh);
   }
 
   // 创建曲线
@@ -203,8 +187,8 @@ export class FlyLine extends Object3D {
   private createParticleGeometry(color: ColorRepresentation | undefined) {
     const geometry = new SphereGeometry(
       this.setting.flyLineAttr.particleSize,
-      8,
-      8,
+      16,
+      16,
     );
     this.singleParticlePosCount = geometry.attributes.position?.count ?? 0;
     // 为每个顶点添加颜色属性
@@ -274,79 +258,6 @@ export class FlyLine extends Object3D {
     }
   }
 
-  // 创建地区点
-  private createPoints() {
-    // 去重处理
-    const uniquePoints = this.removeDuplicatePoints(
-      this.setting.pointCloudAttr.pointsData,
-    );
-
-    const material = new MeshBasicMaterial({
-      transparent: true,
-      opacity: 0.8,
-      depthWrite: false,
-      vertexColors: true,
-    });
-    const geometries = uniquePoints.map((point) => {
-      return this.createPointGeometry(point);
-    });
-
-    const mergeGeometries = BufferGeometryUtils.mergeGeometries(
-      geometries,
-      false,
-    );
-
-    geometries.forEach((geometry) => {
-      geometry.dispose();
-    });
-
-    const pointMesh = new Mesh(mergeGeometries, material);
-    return {
-      mesh: pointMesh,
-      geometry: mergeGeometries,
-      material,
-    };
-  }
-
-  private createPointGeometry(point: Point) {
-    const geometry = new SphereGeometry(
-      this.setting.pointCloudAttr.pointSize,
-      8,
-      8,
-    );
-    const position = latLngToVector3(
-      point.lat,
-      point.lng,
-      this.setting.earthAttr.radius + 0.5,
-    );
-    const colorArray = new Float32Array(
-      (geometry.attributes.position?.count ?? 0) * 3,
-    );
-    const colorVector = new Vector3().setFromColor(
-      new Color(point.color || '#fff'),
-    );
-    for (let i = 0; i < colorArray.length; i++) {
-      colorArray[i * 3] = colorVector.x;
-      colorArray[i * 3 + 1] = colorVector.y;
-      colorArray[i * 3 + 2] = colorVector.z;
-    }
-    geometry.setAttribute('color', new BufferAttribute(colorArray, 3));
-    geometry.translate(position.x, position.y, position.z);
-    return geometry;
-  }
-
-  private removeDuplicatePoints(points: Point[]) {
-    const seen = new Set();
-    return points.filter((point) => {
-      const key = `${point.lat},${point.lng}`;
-      if (seen.has(key)) {
-        return false;
-      }
-      seen.add(key);
-      return true;
-    });
-  }
-
   update() {
     this.currentTime += this.setting.flyLineAttr.flowSpeed / 1000;
     if (this.flyLineGroupEntity.material.uniforms.currentTime) {
@@ -366,10 +277,6 @@ export class FlyLine extends Object3D {
     this.remove(this.particleEntity.mesh);
     this.particleEntity.geometry.dispose();
     this.particleEntity.material.dispose();
-
-    this.remove(this.pointEntity.mesh);
-    this.pointEntity.geometry.dispose();
-    this.pointEntity.material.dispose();
 
     this.curveList = [];
     this.children = [];
