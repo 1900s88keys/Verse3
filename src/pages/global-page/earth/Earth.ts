@@ -17,6 +17,7 @@ import atmosphereVertexShader from '@/shared/shaders/glsl/atmosphere/vertex.glsl
 
 import { Country } from './entity/Country';
 import { FlyLine } from './entity/FlyLine';
+import { Marker } from './entity/Marker';
 import { SETTING, type Setting } from './setting/Setting';
 
 import type { Entity } from './type/Type';
@@ -39,6 +40,8 @@ export class Earth {
   private country: Country;
 
   private flyLine: FlyLine;
+
+  private marker: Marker;
 
   constructor({
     sizes,
@@ -71,6 +74,12 @@ export class Earth {
       setting: this.setting,
     });
     this.container.add(this.flyLine);
+
+    this.marker = new Marker({
+      setting: this.setting,
+    });
+    this.container.add(this.marker);
+
     this.bindEvents();
   }
 
@@ -139,6 +148,7 @@ export class Earth {
 
   update = () => {
     this.flyLine.update();
+    this.marker.update();
   };
 
   destroy() {

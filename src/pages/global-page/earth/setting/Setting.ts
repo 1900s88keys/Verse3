@@ -55,15 +55,29 @@ export const SETTING = {
     particleSize: 0.5,
   },
 
-  pointCloudAttr: {
+  pointAttr: {
     pointsData: [...pointsData],
     pointSize: 0.5,
     pointColor: '#7df9ff',
   },
+
+  ringAttr: {
+    showRing: true,
+    ringColor: '#7df9ff',
+    ringOpacity: 0.5,
+    maxRings: 1.5,
+    wavePointScale: 1.0,
+  },
+
+  waveAttr: {
+    waveCount: 6,
+    waveDuration: 2,
+    waveDelay: 400,
+    waveThickness: 0.4,
+  },
 };
 
 export const globeConfig = {
-  maxRings: 1.5,
   autoRotate: true,
   autoRotateSpeed: 0.05,
   // 飞线动画配置
@@ -71,11 +85,7 @@ export const globeConfig = {
   showFlyingParticle: true,
   particleSize: 0.5,
   // 光波动画配置
-  waveCount: 6,
-  waveDuration: 2,
-  waveDelay: 400,
-  baseCircleScale: 1.0,
-  ringThickness: 0.05,
+
   // 陆地点云配置
   showLandPoints: true,
   landPointSize: 1.0,
