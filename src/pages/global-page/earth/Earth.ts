@@ -63,7 +63,7 @@ export class Earth {
     this.container.add(this.earthEntity.mesh);
 
     this.atmosphereEntity = this.createAtmosphere();
-    // this.container.add(this.atmosphereEntity.mesh);
+    this.container.add(this.atmosphereEntity.mesh);
 
     this.country = new Country({
       setting: this.setting,
