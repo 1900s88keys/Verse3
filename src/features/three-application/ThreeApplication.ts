@@ -5,6 +5,7 @@ import { Camera } from './camera/Camera';
 import { CameraControl } from './camera/CameraControl';
 import { Light } from './light/Light';
 import { Renderer } from './renderer/Renderer';
+import { ResourceLoader } from './resource-loader/ResourceLoader';
 import { Scene } from './scene/Scene';
 import { Sizes } from './sizes/Sizes';
 import { Ticker } from './ticker/Ticker';
@@ -21,6 +22,8 @@ export class ThreeApplication {
   sizes: Sizes;
 
   ticker: Ticker;
+
+  resourceLoader: ResourceLoader;
 
   renderer: Renderer;
 
@@ -45,6 +48,8 @@ export class ThreeApplication {
     this.sizes = new Sizes();
 
     this.ticker = new Ticker();
+
+    this.resourceLoader = new ResourceLoader();
 
     this.renderer = new Renderer({ canvas: this.canvas, sizes: this.sizes });
 

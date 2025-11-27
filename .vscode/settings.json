@@ -18,5 +18,8 @@
   },
   "[glsl]": {
     "editor.defaultFormatter": "raczzalan.webgl-glsl-editor"
-  }
+  },
+  "cSpell.words": [
+    "gltf"
+  ]
 }

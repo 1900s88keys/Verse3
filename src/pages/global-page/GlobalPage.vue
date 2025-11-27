@@ -15,6 +15,7 @@ const earth = new Earth({
   sizes: threeApplication.sizes,
   ticker: threeApplication.ticker,
   pane: threeApplication.pane,
+  resourceLoader: threeApplication.resourceLoader,
 });
 
 console.log(earth.container);

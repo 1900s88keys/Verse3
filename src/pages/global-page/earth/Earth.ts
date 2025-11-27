@@ -10,14 +10,17 @@ import {
 } from 'three';
 import { FolderApi, Pane } from 'tweakpane';
 
+import type { ResourceLoader } from '@/features/three-application/resource-loader/ResourceLoader';
 import type { Sizes } from '@/features/three-application/sizes/Sizes';
 import type { Ticker } from '@/features/three-application/ticker/Ticker';
 import atmosphereFragmentShader from '@/shared/shaders/glsl/atmosphere/fragment.glsl?raw';
 import atmosphereVertexShader from '@/shared/shaders/glsl/atmosphere/vertex.glsl?raw';
 
 import { Country } from './entity/Country';
+import { FlightRoutes } from './entity/FlightRoutes';
 import { FlyLine } from './entity/FlyLine';
 import { Marker } from './entity/Marker';
+import { RESOURCES } from './resource/Resource';
 import { SETTING, type Setting } from './setting/Setting';
 
 import type { Entity } from './type/Type';
@@ -33,6 +36,8 @@ export class Earth {
 
   private setting: Setting;
 
+  private resourceLoader: ResourceLoader;
+
   private earthEntity: Entity<Mesh, SphereGeometry, MeshPhongMaterial>;
 
   private atmosphereEntity: Entity<Mesh, SphereGeometry, ShaderMaterial>;
@@ -43,19 +48,25 @@ export class Earth {
 
   private marker: Marker;
 
+  private flightRoutes: FlightRoutes;
+
   constructor({
     sizes,
     ticker,
     pane,
+    resourceLoader,
   }: {
     sizes: Sizes;
     ticker: Ticker;
     pane: Pane;
+    resourceLoader: ResourceLoader;
   }) {
     this.ticker = ticker;
     this.sceneFolder = pane.addFolder({ title: 'Earth' });
     this.sizes = sizes;
     this.setting = SETTING;
+    this.resourceLoader = resourceLoader;
+    this.resourceLoader.load(RESOURCES);
 
     this.container = new Object3D();
 
@@ -80,15 +91,17 @@ export class Earth {
     });
     this.container.add(this.marker);
 
+    this.flightRoutes = new FlightRoutes({
+      setting: this.setting,
+      resourceLoader: this.resourceLoader,
+    });
+    this.container.add(this.flightRoutes);
+
     this.bindEvents();
   }
 
   private bindEvents() {
     this.ticker.on('tick', this.update);
-  }
-
-  private unbindEvents() {
-    this.ticker.off('tick', this.update);
   }
 
   private createEarth() {
@@ -152,7 +165,6 @@ export class Earth {
   };
 
   destroy() {
-    this.unbindEvents();
     this.container.remove(this.earthEntity.mesh);
     this.earthEntity.geometry.dispose();
     this.earthEntity.material.dispose();
